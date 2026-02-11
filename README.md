@@ -1,1 +1,1 @@
-# fiap-inclusive-hackatoon
+# fiap-inclusive-hackathon
