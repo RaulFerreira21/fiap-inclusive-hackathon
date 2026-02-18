@@ -1,0 +1,198 @@
+<div class="dashboard-container">
+  <!-- Banner de foco (se existir) -->
+  @if (focusActivity) {
+    <div class="focus-banner">
+      <div class="focus-content">
+        <span class="focus-icon">🎯</span>
+        <div>
+          <p class="focus-label">Foco atual</p>
+          <p class="focus-activity">{{ focusActivity }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Cabeçalho do quadro -->
+  <div class="board-header">
+    <div>
+      <h1 class="board-title">Quadro de atividades</h1>
+      <p class="board-subtitle">
+        Neste quadro, você pode visualizar e acompanhar suas atividades de forma organizada.
+      </p>
+    </div>
+    <button class="btn-new-activity" (click)="openTaskModal(columns[0])">
+      <span>+</span> Nova atividade
+    </button>
+  </div>
+
+  <!-- Quadro Kanban -->
+  <div class="board-columns">
+    @for (column of columns; track column.columnId) {
+      <div class="column" [style.background-color]="column.color">
+        <!-- Cabeçalho da coluna -->
+        <div class="column-header">
+          <h3 class="column-title">{{ column.name }}</h3>
+          <div class="column-actions">
+            <button 
+              class="btn-icon" 
+              (click)="openListModal(column)"
+              title="Editar lista">
+              ✏️
+            </button>
+            <button 
+              class="btn-icon" 
+              (click)="deleteList(column.columnId)"
+              title="Excluir lista">
+              🗑️
+            </button>
+          </div>
+        </div>
+
+        <!-- Cards de tarefas -->
+        <div class="tasks-container">
+          @for (task of getTasksByColumn(column.columnId); track task.id) {
+            <div class="task-card">
+              <div class="task-header">
+                <h4 class="task-name">{{ task.name }}</h4>
+                <div class="task-actions">
+                  <button 
+                    class="btn-task-icon" 
+                    (click)="openTaskModal(column, task)"
+                    title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                  </button>
+                  <button 
+                    class="btn-task-icon delete" 
+                    (click)="deleteTask(task.id)"
+                    title="Excluir">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              @if (task.description) {
+                <p class="task-description">{{ task.description }}</p>
+              }
+            </div>
+          }
+
+          <!-- Botão adicionar atividade -->
+          <button class="btn-add-task" (click)="openTaskModal(column)">
+            <span>+</span> Adicionar atividade
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Botão adicionar nova lista -->
+    <button class="btn-add-list" (click)="openListModal()">
+      <span>+</span> Adicionar lista
+    </button>
+  </div>
+
+  <!-- Modal de Tarefa -->
+  @if (showTaskModal()) {
+    <div class="modal-overlay" (click)="closeTaskModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2 class="modal-title">
+          {{ selectedTask() ? 'Editar' : 'Nova' }} Atividade
+        </h2>
+        
+        <div class="form-group">
+          <label for="taskName">Nome da atividade</label>
+          <input 
+            id="taskName"
+            type="text" 
+            [(ngModel)]="taskForm().name"
+            placeholder="Ex: Criar apresentação"
+            autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="taskDescription">Descrição (opcional)</label>
+          <textarea 
+            id="taskDescription"
+            [(ngModel)]="taskForm().description"
+            placeholder="Adicione detalhes sobre a atividade..."
+            rows="4"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeTaskModal()">Cancelar</button>
+          <button class="btn-save" (click)="saveTask()" [disabled]="!taskForm().name.trim()">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal de Lista -->
+  @if (showListModal()) {
+    <div class="modal-overlay" (click)="closeListModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2 class="modal-title">
+          {{ selectedColumn() ? 'Editar' : 'Nova' }} Lista
+        </h2>
+        
+        <div class="form-group">
+          <label for="listName">Nome da lista</label>
+          <input 
+            id="listName"
+            type="text" 
+            [(ngModel)]="listForm().name"
+            placeholder="Ex: Em andamento"
+            autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="listColor">Cor</label>
+          <div class="color-options">
+            <button 
+              class="color-option" 
+              [class.selected]="listForm().color === '#F5F5F5'"
+              [style.background-color]="'#F5F5F5'"
+              (click)="listForm().color = '#F5F5F5'">
+            </button>
+            <button 
+              class="color-option" 
+              [class.selected]="listForm().color === '#FFF9E6'"
+              [style.background-color]="'#FFF9E6'"
+              (click)="listForm().color = '#FFF9E6'">
+            </button>
+            <button 
+              class="color-option" 
+              [class.selected]="listForm().color === '#E8F0FE'"
+              [style.background-color]="'#E8F0FE'"
+              (click)="listForm().color = '#E8F0FE'">
+            </button>
+            <button 
+              class="color-option" 
+              [class.selected]="listForm().color === '#E6F4EA'"
+              [style.background-color]="'#E6F4EA'"
+              (click)="listForm().color = '#E6F4EA'">
+            </button>
+            <button 
+              class="color-option" 
+              [class.selected]="listForm().color === '#EDE7F6'"
+              [style.background-color]="'#EDE7F6'"
+              (click)="listForm().color = '#EDE7F6'">
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="closeListModal()">Cancelar</button>
+          <button class="btn-save" (click)="saveList()" [disabled]="!listForm().name.trim()">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

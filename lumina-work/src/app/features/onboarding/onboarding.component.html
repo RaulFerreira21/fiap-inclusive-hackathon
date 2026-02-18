@@ -1,0 +1,71 @@
+<div class="onboarding-container">
+  <div class="onboarding-content">
+    <!-- Ícone Sol -->
+    <div class="sun-icon">🌞</div>
+
+    <!-- Etapa 1: Boas-vindas -->
+    @if (currentStep() === 0) {
+      <div class="step-content">
+        <h1 class="title">Vamos te ajudar a focar no que importa</h1>
+        <p class="subtitle">Organize suas tarefas e avance um passo de cada vez</p>
+      </div>
+    }
+
+    <!-- Etapa 2: Pergunta sobre atividade -->
+    @if (currentStep() === 1) {
+      <div class="step-content">
+        <h1 class="title">Conte-nos, qual atividade está trabalhando no momento?</h1>
+        <input 
+          type="text" 
+          class="activity-input"
+          [(ngModel)]="focusActivity"
+          placeholder="Ex: Estudar por 30 minutos"
+          (keyup.enter)="canProceed && nextStep()"
+          autofocus>
+      </div>
+    }
+
+    <!-- Etapa 3: Confirmação -->
+    @if (currentStep() === 2) {
+      <div class="step-content">
+        <h1 class="title">
+          Tudo pronto! 
+          @if (focusActivity()) {
+            <span>Vamos focar em {{ focusActivity() }}!</span>
+          } @else {
+            <span>Vamos começar!</span>
+          }
+        </h1>
+        <p class="subtitle">O próximo passo te levará para a página principal do site.</p>
+      </div>
+    }
+
+    <!-- Indicadores de progresso (dots) -->
+    <div class="progress-dots">
+      <span class="dot" [class.active]="currentStep() >= 0"></span>
+      <span class="dot" [class.active]="currentStep() >= 1"></span>
+      <span class="dot" [class.active]="currentStep() >= 2"></span>
+    </div>
+
+    <!-- Mensagem de progresso -->
+    <p class="progress-message">{{ stepMessage }}</p>
+  </div>
+
+  <!-- Botões de navegação -->
+  <div class="navigation-buttons">
+    @if (currentStep() === 1) {
+      <button class="btn-skip" (click)="skipStep()">Pular etapa</button>
+    }
+    
+    @if (currentStep() < 2) {
+      <button 
+        class="btn-next" 
+        (click)="nextStep()"
+        [disabled]="!canProceed">
+        Próximo
+      </button>
+    } @else {
+      <button class="btn-finish" (click)="finish()">Começar</button>
+    }
+  </div>
+</div>
