@@ -23,7 +23,8 @@ export class DashboardComponent {
   
   taskForm = signal({
     name: '',
-    description: ''
+    description: '',
+    columnId: ''
   });
 
   listForm = signal({
@@ -57,17 +58,30 @@ export class DashboardComponent {
     return this.boardService.getTasksByColumn(columnId);
   }
 
+  openNewActivityModal(): void {
+    if (this.columns.length === 0) {
+      alert('Crie uma lista primeiro para poder adicionar atividades!');
+      return;
+    }
+    this.openTaskModal(this.columns[0]);
+  }
+
   openTaskModal(column: Column, task?: Task): void {
     this.selectedColumn.set(column);
     if (task) {
       this.selectedTask.set(task);
       this.taskForm.set({
         name: task.name,
-        description: task.description
+        description: task.description,
+        columnId: column.columnId
       });
     } else {
       this.selectedTask.set(null);
-      this.taskForm.set({ name: '', description: '' });
+      this.taskForm.set({ 
+        name: '', 
+        description: '',
+        columnId: column.columnId
+      });
     }
     this.showTaskModal.set(true);
   }
@@ -76,22 +90,25 @@ export class DashboardComponent {
     this.showTaskModal.set(false);
     this.selectedColumn.set(null);
     this.selectedTask.set(null);
-    this.taskForm.set({ name: '', description: '' });
+    this.taskForm.set({ name: '', description: '', columnId: '' });
   }
 
   saveTask(): void {
     const form = this.taskForm();
-    const column = this.selectedColumn();
     const task = this.selectedTask();
 
-    if (!form.name.trim() || !column) return;
+    if (!form.name.trim()) return;
+
+    // Usar o columnId do formulário (permite mudança de coluna)
+    const targetColumnId = form.columnId || this.selectedColumn()?.columnId;
+    if (!targetColumnId) return;
 
     if (task) {
       // Editar tarefa existente
       this.boardService.updateTask(task.id, form.name, form.description);
     } else {
       // Criar nova tarefa
-      this.boardService.addTask(column.columnId, form.name, form.description);
+      this.boardService.addTask(targetColumnId, form.name, form.description);
     }
 
     this.closeTaskModal();

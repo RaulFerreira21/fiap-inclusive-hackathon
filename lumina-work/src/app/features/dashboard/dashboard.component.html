@@ -20,7 +20,7 @@
         Neste quadro, você pode visualizar e acompanhar suas atividades de forma organizada.
       </p>
     </div>
-    <button class="btn-new-activity" (click)="openTaskModal(columns[0])">
+    <button class="btn-new-activity" (click)="openNewActivityModal()" [disabled]="columns.length === 0">
       <span>+</span> Nova atividade
     </button>
   </div>
@@ -126,6 +126,21 @@
         <h2 class="modal-title">
           {{ selectedTask() ? 'Editar' : 'Nova' }} Atividade
         </h2>
+        
+        <!-- Seletor de coluna (apenas para novas atividades) -->
+        @if (!selectedTask() && columns.length > 1) {
+          <div class="form-group">
+            <label for="taskColumn">Lista</label>
+            <select 
+              id="taskColumn"
+              [(ngModel)]="taskForm().columnId"
+              class="column-select">
+              @for (column of columns; track column.columnId) {
+                <option [value]="column.columnId">{{ column.name }}</option>
+              }
+            </select>
+          </div>
+        }
         
         <div class="form-group">
           <label for="taskName">Nome da atividade</label>

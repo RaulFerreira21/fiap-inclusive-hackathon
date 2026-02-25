@@ -77,12 +77,17 @@
     font-size: 1.25rem;
   }
   
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: #9ec5ed;
   }
   
-  &:active {
+  &:active:not(:disabled) {
     opacity: 0.8;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
@@ -358,7 +363,8 @@
   }
   
   input,
-  textarea {
+  textarea,
+  select {
     width: 100%;
     padding: 0.625rem 0.875rem;
     border: 1px solid #d1d5db;
@@ -366,6 +372,7 @@
     font-size: 1rem;
     color: #1f2937;
     transition: all 0.2s;
+    background-color: white;
     
     &:focus {
       outline: none;
