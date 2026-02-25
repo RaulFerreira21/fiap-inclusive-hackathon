@@ -19,6 +19,7 @@ export class DashboardComponent {
   showListModal = signal(false);
   selectedColumn = signal<Column | null>(null);
   selectedTask = signal<Task | null>(null);
+  collapsedColumns = signal<Set<string>>(new Set());
   
   taskForm = signal({
     name: '',
@@ -36,6 +37,20 @@ export class DashboardComponent {
 
   get focusActivity(): string {
     return localStorage.getItem('focusActivity') || '';
+  }
+
+  isCollapsed(columnId: string): boolean {
+    return this.collapsedColumns().has(columnId);
+  }
+
+  toggleCollapse(columnId: string): void {
+    const current = new Set(this.collapsedColumns());
+    if (current.has(columnId)) {
+      current.delete(columnId);
+    } else {
+      current.add(columnId);
+    }
+    this.collapsedColumns.set(current);
   }
 
   getTasksByColumn(columnId: string): Task[] {
