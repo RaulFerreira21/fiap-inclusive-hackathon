@@ -1,0 +1,142 @@
+@if (isOpen) {
+  <div class="overlay" (click)="onClose()"></div>
+
+  <aside class="panel open">
+    <header class="panel-header">
+      <div>
+        <h2 class="panel-title">Configurações</h2>
+        <p class="panel-subtitle">
+          Use esta página para ajustar o aplicativo do jeito que funciona melhor para você.
+        </p>
+      </div>
+      <button class="panel-close" (click)="onClose()">✕</button>
+    </header>
+
+    <section class="section-desc">
+      <h3>Modos Cognitivos</h3>
+      <p class="panel-subtitle">Escolha modos já personalizados</p>
+      <div class="toggle-item">
+        <div>
+          <span>Foco</span>
+          <small>Modo leitura clara, notificações bloqueadas</small>
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div>
+          <span>Leitura Clara</span>
+          <small>Otimização visual, menos distrações</small>
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div>
+          <span>Sensibilidade Sensorial</span>
+          <small>Reduz sons e estímulos</small>
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div>
+          <span>Baixa Atenção</span>
+          <small>Texto maior e frases curtas.</small>
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="section-desc">
+      <h3>Personalização Visuais</h3>
+      <p class="panel-subtitle">Algumas configurações extras que podem melhorar sua experiência.</p>
+      <div class="toggle-item">
+        <div>
+          <span>Tamanho da fonte</span>
+          <small>Modo leitura clara, notificações bloqueadas</small>
+        </div>
+        <select class="font-select">
+          <option value="small">Pequena</option>
+          <option value="medium" selected>Média</option>
+          <option value="large">Grande</option>
+        </select>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-small">
+          <span>Alertas visuais</span>
+          <small
+            >Com essa opção ativa, você receberá alertas visuais em vez de sonoros, facilitando a
+            percepção de notificações mesmo em ambientes silenciosos.</small
+          >
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-small">
+          <span>Passos guiados</span>
+          <small
+            >Ao ativar essa opção, serão apresentados passo a passo, ajudando você a entender melhor
+            cada ação dentro do site evitando confusões durante o uso.</small
+          >
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="section-desc">
+      <h3>Foco e produtividade</h3>
+      <p class="panel-subtitle">
+        Configurações pensadas para ajudar você a manter a concentração, organizar melhor seu tempo
+        e reduzir distrações durante as atividades.
+      </p>
+      <div class="toggle-item">
+        <div class="toggle-small">
+          <span>Modo foco</span>
+          <small
+            >Com o modo foco ativado, distrações visuais são reduzidas para que você consiga se
+            concentrar melhor na atividade que está realizando.</small
+          >
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-item">
+        <div class="toggle-small">
+          <span>Timer pomodoro</span>
+          <small
+            >Ao ativar o timer pomodoro, você organiza seu tempo em ciclos de trabalho e pausa,
+            ajudando a manter o foco e evitar o cansaço mental.</small
+          >
+        </div>
+        <label class="switch">
+          <input type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </section>
+  </aside>
+}

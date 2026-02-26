@@ -2,12 +2,14 @@
   @if (showLayout()) {
     <app-header (onOpenSettings)="handleOpenSettings()"></app-header>
   }
-  
+
   <main class="main-content" [class.full-height]="!showLayout()">
     <router-outlet></router-outlet>
   </main>
-  
+
   @if (showLayout()) {
     <app-footer></app-footer>
   }
+
+  <app-settings-panel [isOpen]="settingsOpen" (close)="handleCloseSettings()"> </app-settings-panel>
 </div>

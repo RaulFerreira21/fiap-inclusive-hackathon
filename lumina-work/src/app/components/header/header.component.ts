@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, EventEmitter, inject, Output, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PomodoroService } from '../../services/pomodoro.service';
 import { AppStateService } from '../../services/app-state.service';
@@ -8,13 +8,13 @@ import { AppStateService } from '../../services/app-state.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  @Output() onOpenSettings = new EventEmitter<void>();
+
   private pomodoroService = inject(PomodoroService);
   private appStateService = inject(AppStateService);
-
-  onOpenSettings = output<void>();
 
   get pomodoroTime(): string {
     return this.pomodoroService.formatTime();
