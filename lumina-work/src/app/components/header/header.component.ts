@@ -32,6 +32,10 @@ export class HeaderComponent {
     return this.appStateService.focusMode();
   }
 
+  get canToggleFocus(): boolean {
+    return this.appStateService.hasOpenLists();
+  }
+
   togglePomodoro(): void {
     this.pomodoroService.toggleTimer();
   }

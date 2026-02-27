@@ -1,9 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BoardService } from '../../services/board.service';
 import { Column } from '../../domain/models/column';
 import { Task } from '../../domain/models/tasks';
+import { AppStateService } from '../../services/app-state.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,11 +13,13 @@ import { Task } from '../../domain/models/tasks';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   private boardService = inject(BoardService);
+  private appStateService = inject(AppStateService);
 
   showTaskModal = signal(false);
   showListModal = signal(false);
+  showNewFocusModal = signal(false);
   selectedColumn = signal<Column | null>(null);
   selectedTask = signal<Task | null>(null);
   collapsedColumns = signal<Set<string>>(new Set());
@@ -40,6 +43,23 @@ export class DashboardComponent {
     return localStorage.getItem('focusActivity') || '';
   }
 
+  get focusMode(): boolean {
+    return this.appStateService.focusMode();
+  }
+
+  get openColumns(){
+    return this.columns.filter(c => !this.isCollapsed(c.columnId));
+  }
+
+  ngOnInit(): void {
+    this.updateOpenLists();
+  }
+
+  updateOpenLists(): void {
+    const openCount = Array.isArray(this.columns) ? this.columns.filter(c => !this.isCollapsed(c.columnId)).length : 0;
+    this.appStateService.setOpenLists(openCount)
+  }
+
   isCollapsed(columnId: string): boolean {
     return this.collapsedColumns().has(columnId);
   }
@@ -52,6 +72,7 @@ export class DashboardComponent {
       current.add(columnId);
     }
     this.collapsedColumns.set(current);
+    this.updateOpenLists();
   }
 
   getTasksByColumn(columnId: string): Task[] {
@@ -154,12 +175,14 @@ export class DashboardComponent {
       this.boardService.addColumn(form.name, form.color);
     }
 
+    this.updateOpenLists();
     this.closeListModal();
   }
 
  deleteList(columnId: string): void {
     if (confirm('Tem certeza que deseja excluir esta lista? Todas as tarefas serão removidas.')) {
       this.boardService.deleteColumn(columnId);
+      this.updateOpenLists();
     }
   }
 }

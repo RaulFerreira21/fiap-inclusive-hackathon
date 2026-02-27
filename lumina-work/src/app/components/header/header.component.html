@@ -3,6 +3,7 @@
     <!-- Logo -->
     <div class="logo">
       <span class="logo-icon">🌞</span>
+      <span>Lumina</span>
     </div>
 
     <!-- Controles -->
@@ -26,7 +27,10 @@
         class="control-btn focus-btn"
         (click)="toggleFocusMode()"
         [class.active]="focusMode"
-        [attr.aria-label]="focusMode ? 'Desativar modo foco' : 'Ativar modo foco'">
+        [attr.aria-label]="focusMode ? 'Desativar modo foco' : 'Ativar modo foco'"
+        [disabled]="!canToggleFocus"
+        [attr.title]="!canToggleFocus? 'Ative/expanda ao menos uma lista para usar o modo foco': ''"
+        >
         <span class="focus-label">Modo foco:</span>
         <span class="focus-status" [class.active]="focusMode">
           {{ focusMode ? 'ativado' : 'desativado' }}

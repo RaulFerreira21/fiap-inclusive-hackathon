@@ -25,10 +25,7 @@ export class BoardService {
     } else {
       // Criar colunas padrão
       const defaultColumns: Column[] = [
-        { columnId: '1', name: 'Backlog', color: '#E8F0FE' },
-        { columnId: '2', name: 'Planejamento', color: '#FFF9E6' },
-        { columnId: '3', name: 'Em Desenvolvimento', color: '#E8F0FE' },
-        { columnId: '4', name: 'Concluídas', color: '#E6F4EA' }
+        { columnId: '1', name: 'A Fazeres', color: '#E8F0FE' },
       ];
       this.columns.set(defaultColumns);
       this.saveColumns();
