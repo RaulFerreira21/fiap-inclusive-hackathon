@@ -1,0 +1,106 @@
+<div
+  class="modal-overlay"
+  [class.open]="isOpen()"
+  [class.no-animation]="hideAnimations()"
+  (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">
+      {{ selectedColumn() ? 'Editar' : 'Nova' }} Lista
+    </h2>
+
+    <div class="form-group">
+      <label for="listName">Nome da lista</label>
+      <input 
+        id="listName"
+        type="text" 
+        [ngModel]="listForm().name"
+        (ngModelChange)="listForm().name = $event"
+        placeholder="Ex: Em andamento"
+        autofocus>
+    </div>
+
+    <div class="form-group">
+      <label for="listColor">Cor</label>
+      <div class="color-options">
+        <div class="color-options">
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#F5F5F5'"
+          [style.background-color]="'#F5F5F5'"
+          (click)="listForm().color = '#F5F5F5'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#FFF9E6'"
+          [style.background-color]="'#FFF9E6'"
+          (click)="listForm().color = '#FFF9E6'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#E8F0FE'"
+          [style.background-color]="'#E8F0FE'"
+          (click)="listForm().color = '#E8F0FE'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#E6F4EA'"
+          [style.background-color]="'#E6F4EA'"
+          (click)="listForm().color = '#E6F4EA'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#EDE7F6'"
+          [style.background-color]="'#EDE7F6'"
+          (click)="listForm().color = '#EDE7F6'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#EDDDD1'"
+          [style.background-color]="'#EDDDD1'"
+          (click)="listForm().color = '#EDDDD1'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#F2E2E3'"
+          [style.background-color]="'#F2E2E3'"
+          (click)="listForm().color = '#F2E2E3'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#CCE0DA'"
+          [style.background-color]="'#CCE0DA'"
+          (click)="listForm().color = '#CCE0DA'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#B1BECD'"
+          [style.background-color]="'#B1BECD'"
+          (click)="listForm().color = '#B1BECD'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#C9D1D8'"
+          [style.background-color]="'#C9D1D8'"
+          (click)="listForm().color = '#C9D1D8'">
+        </button>
+        <button 
+          class="color-option" 
+          [class.selected]="listForm().color === '#9CA4A4'"
+          [style.background-color]="'#9CA4A4'"
+          (click)="listForm().color = '#9CA4A4'">
+        </button>
+      </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="onClose()">Cancelar</button>
+      <button 
+        class="btn-save" 
+        (click)="onSave()" 
+        [disabled]="!listForm().name.trim()">
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>

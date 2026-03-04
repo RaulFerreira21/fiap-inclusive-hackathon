@@ -2,9 +2,10 @@ import { Component, signal, effect } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { SettingsPanel } from './components/settings-panel/settings-panel';
+import { FooterComponent } from './presentation/components/footer/footer.component';
+import { HeaderComponent } from './presentation/components/header/header.component';
+import { SettingsPanel } from './presentation/components/settings-panel/settings-panel';
+
 
 @Component({
   selector: 'app-root',

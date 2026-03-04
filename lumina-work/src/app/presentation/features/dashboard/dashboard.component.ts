@@ -1,15 +1,19 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BoardService } from '../../services/board.service';
-import { Column } from '../../domain/models/column';
-import { Task } from '../../domain/models/tasks';
-import { AppStateService } from '../../services/app-state.service';
+import { Column } from '../../../domain/models/column';
+import { Task } from '../../../domain/models/tasks';
+import { AppStateService } from '../../../services/app-state.service';
+import { BoardService } from '../../../services/board.service';
+import { BoardComponent } from '../../components/board/board.component';
+import { ListModalComponent } from '../../components/list-modal/list-modal.component';
+import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TaskModalComponent, ListModalComponent, BoardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -22,7 +26,6 @@ export class DashboardComponent implements OnInit {
   showNewFocusModal = signal(false);
   selectedColumn = signal<Column | null>(null);
   selectedTask = signal<Task | null>(null);
-  collapsedColumns = signal<Set<string>>(new Set());
   
   taskForm = signal({
     name: '',
@@ -68,41 +71,24 @@ export class DashboardComponent implements OnInit {
   get columns(): Column[] {
     return this.boardService.columns();
   }
+  /** expose the raw signal for child inputs that expect a Signal */
+  columnsSignal = this.boardService.columns;
 
   get focusActivity(): string {
     return localStorage.getItem('focusActivity') || '';
   }
 
-  get openColumns() {
-    return this.columns.filter(c => !this.isCollapsed(c.columnId));
-  }
+  // Prevent unused import warnings for dynamically referenced components
+  protected readonly TaskModal = TaskModalComponent;
+  protected readonly ListModal = ListModalComponent;
+  protected readonly Board = BoardComponent;
 
-  ngOnInit(): void {
-    this.updateOpenLists();
-  }
+  ngOnInit(): void {}
 
-  updateOpenLists(): void {
-    const openCount = Array.isArray(this.columns) ? this.columns.filter(c => !this.isCollapsed(c.columnId)).length : 0;
-    this.appStateService.setOpenLists(openCount)
-  }
-
-  isCollapsed(columnId: string): boolean {
-    return this.collapsedColumns().has(columnId);
-  }
-
-  toggleCollapse(columnId: string): void {
-    const current = new Set(this.collapsedColumns());
-    if (current.has(columnId)) {
-      current.delete(columnId);
-    } else {
-      current.add(columnId);
-    }
-    this.collapsedColumns.set(current);
-    this.updateOpenLists();
-  }
-
-  getTasksByColumn(columnId: string): Task[] {
-    return this.boardService.getTasksByColumn(columnId);
+  onToggleColumnCollapse(columnId: string): void {
+    // Update openLists count when column collapse state changes
+    const openCount = this.columns.length;
+    this.appStateService.setOpenLists(openCount);
   }
 
   openNewActivityModal(): void {
@@ -196,14 +182,12 @@ export class DashboardComponent implements OnInit {
       this.boardService.addColumn(form.name, form.color);
     }
 
-    this.updateOpenLists();
     this.closeListModal();
   }
 
   deleteList(columnId: string): void {
     if (confirm('Tem certeza que deseja excluir esta lista? Todas as tarefas serão removidas.')) {
       this.boardService.deleteColumn(columnId);
-      this.updateOpenLists();
     }
   }
 }

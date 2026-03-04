@@ -1,0 +1,78 @@
+<div class="dashboard-container" [class.font-small]="fontSize === 'small'"
+     [class.font-large]="fontSize === 'large'"
+     [class.dark-mode]="darkMode"
+     [class.high-contrast]="highContrast">
+  <!-- Banner de foco (se existir) -->
+  @if (!focusMode && focusActivity) {
+    <div class="focus-banner">
+      <div class="focus-content">
+        <span class="focus-icon">🎯</span>
+        <div>
+          <p class="focus-label">Projeto atual:</p>
+          <p class="focus-activity">{{ focusActivity }}</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Cabeçalho do quadro -->
+  @if(!focusMode && !clearReading){
+    <div class="board-header">
+      <div>
+        <h1 class="board-title">
+          @if (lowAttention) {
+            Atividades
+          } @else {
+            Quadro de atividades
+          }
+        </h1>
+        @if (!lowAttention) {
+          <p class="board-subtitle">
+            Neste quadro, você pode visualizar e acompanhar suas atividades de forma organizada.
+          </p>
+        } @else {
+          <p class="board-subtitle">
+            Acompanhe suas atividades de forma organizada.
+          </p>
+        }
+      </div>
+      <button class="btn-new-activity" (click)="openNewActivityModal()" [disabled]="columns.length === 0">
+        <span>+</span> 
+          Nova atividade
+      </button>
+    </div>
+  }
+
+  <!-- Quadro Kanban -->
+  <app-board
+    [columns]="columnsSignal"
+    [focusMode]="focusMode"
+    [focusActivity]="focusActivity"
+    (toggleColumnCollapse)="onToggleColumnCollapse($event)"
+    (addColumn)="openListModal()"
+    (editColumn)="openListModal($event)"
+    (deleteColumn)="deleteList($event)"
+    (addTask)="openTaskModal($event)"
+    (editTask)="openTaskModal($event.column, $event.task)"
+    (deleteTask)="deleteTask($event)">
+  </app-board>
+
+  <!-- Modal de Tarefa -->
+  <app-task-modal
+    [isOpen]="showTaskModal"
+    [columns]="columnsSignal"
+    [selectedTask]="selectedTask"
+    [taskForm]="taskForm"
+    (close)="closeTaskModal()"
+    (save)="saveTask()">
+  </app-task-modal>
+
+  <!-- Modal de Lista -->
+  <app-list-modal
+    [isOpen]="showListModal"
+    [selectedColumn]="selectedColumn"
+    [listForm]="listForm"
+    (close)="closeListModal()"
+    (save)="saveList()">
+  </app-list-modal>
+</div>

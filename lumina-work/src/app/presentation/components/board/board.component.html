@@ -1,0 +1,102 @@
+<div class="board-columns">
+  @for (column of columns(); track column.columnId) {
+    <div 
+      class="column"
+      [class.column--collapsed]="isCollapsed(column.columnId)"
+      [style.background-color]="column.color">
+
+      <!-- Estado colapsado -->
+      @if (isCollapsed(column.columnId)) {
+        <div class="column-collapsed-content">
+          <button
+            class="btn-expand"
+            (click)="onToggleCollapse(column.columnId)"
+            title="Expandir coluna">
+            &#x2192;&#x007C;
+          </button>
+          <span class="column-collapsed-title">
+            {{ column.name }} ({{ getTasksByColumn(column.columnId).length }})
+          </span>
+        </div>
+      }
+
+      <!-- Estado expandido -->
+      @if (!isCollapsed(column.columnId)) {
+        <div class="column-expanded">
+          <!-- Cabeçalho da coluna -->
+          <div class="column-header">
+            <h3 class="column-title">{{ column.name }}</h3>
+            @if (!focusMode) {
+              <div class="column-actions">
+                <button
+                  class="btn-icon"
+                  (click)="onToggleCollapse(column.columnId)"
+                  title="Colapsar coluna">
+                  &#x007C;&#x2190;
+                </button>
+                <button
+                  class="btn-icon"
+                  (click)="onEditColumn(column)"
+                  title="Editar lista">
+                  ✏️
+                </button>
+                <button
+                  class="btn-icon"
+                  (click)="onDeleteColumn(column.columnId)"
+                  title="Excluir lista">
+                  🗑️
+                </button>
+              </div>
+            }
+          </div>
+
+          <!-- Cards de tarefas -->
+          <div class="tasks-container">
+            @for (task of getTasksByColumn(column.columnId); track task.id) {
+              <div class="task-card">
+                <div class="task-header">
+                  <h4 class="task-name">{{ task.name }}</h4>
+                  <div class="task-actions">
+                    <button
+                      class="btn-task-icon"
+                      (click)="onEditTask(column, task)"
+                      title="Editar">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    <button
+                      class="btn-task-icon delete"
+                      (click)="onDeleteTask(task.id)"
+                      title="Excluir">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                @if (task.description) {
+                  <p class="task-description">{{ task.description }}</p>
+                }
+              </div>
+            }
+
+            <!-- Botão adicionar atividade -->
+            <button class="btn-add-task" (click)="onAddTask(column)">
+              <span>+</span> Adicionar atividade
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Botão adicionar nova lista -->
+  @if (!focusMode) {
+    <button class="btn-add-list" (click)="onAddColumn()">
+      <span>+</span> Adicionar lista
+    </button>
+  }
+</div>

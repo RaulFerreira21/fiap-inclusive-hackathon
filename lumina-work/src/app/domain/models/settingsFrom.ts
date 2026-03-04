@@ -1,11 +1,11 @@
-export interface SettingsForm {
-  cognitiveFocus: boolean;
+interface SettingsForm {
   clearReading: boolean;
-  sensorySensitivity: boolean;
   lowAttention: boolean;
   fontSize: 'small' | 'medium' | 'large';
-  visualAlerts: boolean;
   guidedSteps: boolean;
-  productivityFocus: boolean;
-  pomodoroTimer: boolean;
+  darkMode: boolean;
+  highContrast: boolean;
+  focusModeEnabled: boolean;
+  pomodoroTimerEnabled: boolean;
+  hideAnimations: boolean;
 }

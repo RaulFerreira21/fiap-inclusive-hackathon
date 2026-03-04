@@ -1,18 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, signal, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppStateService } from '../../services/app-state.service';
-
-interface SettingsForm {
-  clearReading: boolean;
-  lowAttention: boolean;
-  fontSize: 'small' | 'medium' | 'large';
-  guidedSteps: boolean;
-  darkMode: boolean;
-  highContrast: boolean;
-  focusModeEnabled: boolean;
-  pomodoroTimerEnabled: boolean;
-}
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-settings-panel',
@@ -35,7 +24,8 @@ export class SettingsPanel {
     darkMode: false,
     highContrast: false,
     focusModeEnabled: true,
-    pomodoroTimerEnabled: true
+    pomodoroTimerEnabled: true,
+    hideAnimations: false,
   });
 
   constructor() {
@@ -50,7 +40,8 @@ export class SettingsPanel {
           darkMode: this.appState.darkMode(),
           highContrast: this.appState.highContrast(),
           focusModeEnabled: this.appState.focusModeEnabled(),
-          pomodoroTimerEnabled: this.appState.pomodoroTimerEnabled()
+          pomodoroTimerEnabled: this.appState.pomodoroTimerEnabled(),
+          hideAnimations: this.appState.hideAnimations()
         });
       }
     });

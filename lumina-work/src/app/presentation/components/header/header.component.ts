@@ -1,7 +1,8 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PomodoroService } from '../../services/pomodoro.service';
-import { AppStateService } from '../../services/app-state.service';
+import { AppStateService } from '../../../services/app-state.service';
+import { PomodoroService } from '../../../services/pomodoro.service';
+
 
 @Component({
   selector: 'app-header',

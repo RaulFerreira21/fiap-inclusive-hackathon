@@ -106,6 +106,20 @@
             <span class="slider"></span>
           </label>
         </div>
+
+        <div class="toggle-item">
+          <div class="toggle-small">
+            <span>Remover Animações</span>
+            <small>Esconde animações das janelas de criação, edição e mensagens</small>
+          </div>
+          <label class="switch">
+            <input
+              type="checkbox"
+              [checked]="settingsForm().hideAnimations"
+              (change)="updateField('hideAnimations', $any($event.target).checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
       </section>
 
       <!-- Foco e Produtividade -->

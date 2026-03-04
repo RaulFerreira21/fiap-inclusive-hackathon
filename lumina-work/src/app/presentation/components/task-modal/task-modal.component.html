@@ -1,0 +1,74 @@
+  <div 
+  class="modal-overlay" 
+  (click)="onClose()"
+  [class.open]="isOpen()"
+  [class.no-animation]="hideAnimations()"
+  >
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2 class="modal-title">
+        {{ selectedTask() ? 'Editar' : 'Nova' }} Atividade
+      </h2>
+
+      <!-- Seletor de coluna (apenas para novas atividades) -->
+      @if(!selectedTask() && columns().length > 1) {
+        <div class="form-group">
+          <label for="taskColumn">Lista</label>
+          <select 
+            id="taskColumn"
+            [ngModel]="taskForm().columnId"
+            (ngModelChange)="taskForm().columnId = $event"
+            class="column-select">
+            <option *ngFor="let column of columns()" [value]="column.columnId">
+              {{ column.name }}
+            </option>
+          </select>
+        </div>
+      }
+
+      @if(selectedTask() && columns().length > 1) {
+      <div class="form-group">
+        <label for="taskColumnEdit">Mover para lista</label>
+        <select 
+          id="taskColumnEdit"
+          [ngModel]="taskForm().columnId"
+          (ngModelChange)="taskForm().columnId = $event"
+          class="column-select">
+          <option *ngFor="let column of columns()" [value]="column.columnId">
+            {{ column.name }}
+          </option>
+        </select>
+      </div>
+    }
+
+      <div class="form-group">
+      <label for="taskName">Nome da atividade</label>
+      <input 
+        id="taskName"
+        type="text" 
+        [ngModel]="taskForm().name"
+        (ngModelChange)="taskForm().name = $event"
+        placeholder="Ex: Criar apresentação"
+        autofocus>
+    </div>
+
+    <div class="form-group">
+      <label for="taskDescription">Descrição (opcional)</label>
+      <textarea 
+        id="taskDescription"
+        [ngModel]="taskForm().description"
+        (ngModelChange)="taskForm().description = $event"
+        placeholder="Adicione detalhes sobre a atividade..."
+        rows="4"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="onClose()">Cancelar</button>
+      <button 
+        class="btn-save" 
+        (click)="onSave()" 
+        [disabled]="!taskForm().name.trim()">
+        Salvar
+      </button>
+    </div>
+  </div> <!-- .modal-content -->
+  </div> <!-- .modal-overlay -->

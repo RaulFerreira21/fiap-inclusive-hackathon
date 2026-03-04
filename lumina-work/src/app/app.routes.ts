@@ -34,12 +34,12 @@ export const routes: Routes = [
   },
   {
     path: 'onboarding',
-    loadComponent: () => import('./features/onboarding/onboarding.component').then(m => m.OnboardingComponent),
+    loadComponent: () => import('./presentation/features/onboarding/onboarding.component').then(m => m.OnboardingComponent),
     canActivate: [onboardingGuard]
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    loadComponent: () => import('./presentation/features/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [dashboardGuard]
   },
   {

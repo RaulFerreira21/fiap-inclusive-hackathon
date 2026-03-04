@@ -21,6 +21,7 @@ export class AppStateService {
   // Settings signals - Foco e Produtividade
   focusModeEnabled = signal(true); // controla se o botão aparece no header
   pomodoroTimerEnabled = signal(true); // controla se o timer pomodoro aparece
+  hideAnimations = signal(false);
 
   constructor() {
     // Aplica classes ao body conforme as configurações mudam
@@ -61,6 +62,7 @@ export class AppStateService {
     highContrast: boolean;
     focusModeEnabled: boolean;
     pomodoroTimerEnabled: boolean;
+    hideAnimations: boolean;
   }): void {
     this.clearReading.set(settings.clearReading);
     this.lowAttention.set(settings.lowAttention);
@@ -70,7 +72,7 @@ export class AppStateService {
     this.highContrast.set(settings.highContrast);
     this.focusModeEnabled.set(settings.focusModeEnabled);
     this.pomodoroTimerEnabled.set(settings.pomodoroTimerEnabled);
-
+    this.hideAnimations.set(settings.hideAnimations);
     // Salva as configurações no localStorage
     this.saveSettings();
 
@@ -94,15 +96,6 @@ export class AppStateService {
     // Aplicar classe de tamanho de fonte
     body.classList.remove('font-small', 'font-medium', 'font-large');
     body.classList.add(`font-${this.fontSize()}`);
-
-    console.log('[AppState] Classes aplicadas:', {
-      clearReading: this.clearReading(),
-      lowAttention: this.lowAttention(),
-      guidedSteps: this.guidedSteps(),
-      fontSize: this.fontSize(),
-      darkMode: this.darkMode(),
-      highContrast: this.highContrast()
-    });
   }
 
   // ============ PERSISTÊNCIA ============
@@ -116,7 +109,8 @@ export class AppStateService {
       darkMode: this.darkMode(),
       highContrast: this.highContrast(),
       focusModeEnabled: this.focusModeEnabled(),
-      pomodoroTimerEnabled: this.pomodoroTimerEnabled()
+      pomodoroTimerEnabled: this.pomodoroTimerEnabled(),
+      hideAnimations: this.hideAnimations()
     };
     localStorage.setItem('lumina_settings', JSON.stringify(settings));
   }
