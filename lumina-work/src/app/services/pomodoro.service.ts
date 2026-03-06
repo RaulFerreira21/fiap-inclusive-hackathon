@@ -1,9 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 
-const POMODORO_DURATION = 25 * 60; // 25 minutos em segundos
+const POMODORO_DURATION = 25 * 60;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PomodoroService {
   private intervalId: any = null;

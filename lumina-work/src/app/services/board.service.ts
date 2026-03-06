@@ -3,7 +3,7 @@ import { Column } from '../domain/models/column';
 import { Task } from '../domain/models/tasks';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BoardService {
   private readonly STORAGE_KEY_COLUMNS = 'lumina_columns';
@@ -23,10 +23,7 @@ export class BoardService {
     if (savedColumns) {
       this.columns.set(JSON.parse(savedColumns));
     } else {
-      // Criar colunas padrão
-      const defaultColumns: Column[] = [
-        { columnId: '1', name: 'A Fazeres', color: '#E8F0FE' },
-      ];
+      const defaultColumns: Column[] = [{ columnId: '1', name: 'A Fazeres', color: '#E8F0FE' }];
       this.columns.set(defaultColumns);
       this.saveColumns();
     }
@@ -44,73 +41,63 @@ export class BoardService {
     localStorage.setItem(this.STORAGE_KEY_TASKS, JSON.stringify(this.tasks()));
   }
 
-  // CRUD de Colunas
   addColumn(name: string, color: string): void {
     const newColumn: Column = {
       columnId: this.generateId(),
       name,
-      color
+      color,
     };
-    this.columns.update(cols => [...cols, newColumn]);
+    this.columns.update((cols) => [...cols, newColumn]);
     this.saveColumns();
   }
 
   updateColumn(columnId: string, name: string, color: string): void {
-    this.columns.update(cols =>
-      cols.map(col =>
-        col.columnId === columnId ? { ...col, name, color } : col
-      )
+    this.columns.update((cols) =>
+      cols.map((col) => (col.columnId === columnId ? { ...col, name, color } : col)),
     );
     this.saveColumns();
   }
 
   deleteColumn(columnId: string): void {
-    // Remover todas as tarefas da coluna
-    this.tasks.update(tasks => tasks.filter(t => t.columnId !== columnId));
+    this.tasks.update((tasks) => tasks.filter((t) => t.columnId !== columnId));
     this.saveTasks();
-    
-    // Remover coluna
-    this.columns.update(cols => cols.filter(col => col.columnId !== columnId));
+
+    this.columns.update((cols) => cols.filter((col) => col.columnId !== columnId));
     this.saveColumns();
   }
 
-  // CRUD de Tarefas
   addTask(columnId: string, name: string, description: string): void {
     const newTask: Task = {
       id: this.generateId(),
       columnId,
       name,
-      description
+      description,
     };
-    this.tasks.update(tasks => [...tasks, newTask]);
+    this.tasks.update((tasks) => [...tasks, newTask]);
     this.saveTasks();
   }
 
   updateTask(taskId: string, name: string, description: string): void {
-    this.tasks.update(tasks =>
-      tasks.map(task =>
-        task.id === taskId ? { ...task, name, description } : task
-      )
+    this.tasks.update((tasks) =>
+      tasks.map((task) => (task.id === taskId ? { ...task, name, description } : task)),
     );
     this.saveTasks();
   }
 
   moveTask(taskId: string, newColumnId: string): void {
-    this.tasks.update(tasks =>
-      tasks.map(task =>
-        task.id === taskId ? { ...task, columnId: newColumnId } : task
-      )
+    this.tasks.update((tasks) =>
+      tasks.map((task) => (task.id === taskId ? { ...task, columnId: newColumnId } : task)),
     );
     this.saveTasks();
   }
 
   deleteTask(taskId: string): void {
-    this.tasks.update(tasks => tasks.filter(t => t.id !== taskId));
+    this.tasks.update((tasks) => tasks.filter((t) => t.id !== taskId));
     this.saveTasks();
   }
 
   getTasksByColumn(columnId: string): Task[] {
-    return this.tasks().filter(task => task.columnId === columnId);
+    return this.tasks().filter((task) => task.columnId === columnId);
   }
 
   private generateId(): string {

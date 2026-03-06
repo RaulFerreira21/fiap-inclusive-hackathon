@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './onboarding.component.html',
-  styleUrl: './onboarding.component.scss'
+  styleUrl: './onboarding.component.scss',
 })
 export class OnboardingComponent {
   currentStep = signal(0);
@@ -32,15 +32,12 @@ export class OnboardingComponent {
   }
 
   finish(): void {
-    // Salvar atividade de foco no localStorage
     if (this.focusActivity()) {
       localStorage.setItem('focusActivity', this.focusActivity());
     }
-    
-    // Marcar onboarding como completo
+
     localStorage.setItem('onboardingComplete', 'true');
-    
-    // Navegar para o dashboard
+
     this.router.navigate(['/dashboard']);
   }
 

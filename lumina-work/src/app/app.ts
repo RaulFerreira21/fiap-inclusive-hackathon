@@ -20,7 +20,6 @@ export class App {
   highContrast = false;
 
   constructor(private router: Router) {
-    // Ocultar header/footer no onboarding
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
@@ -31,7 +30,6 @@ export class App {
   handleOpenSettings(): void {
     this.settingsOpen = true;
     console.log('Abrir configurações');
-    // TODO: Implementar modal ou rota de configurações
   }
 
   handleCloseSettings() {

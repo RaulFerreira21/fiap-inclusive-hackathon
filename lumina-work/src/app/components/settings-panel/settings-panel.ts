@@ -16,6 +16,7 @@ interface SettingsForm {
 
 @Component({
   selector: 'app-settings-panel',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './settings-panel.html',
   styleUrl: './settings-panel.scss',
@@ -35,11 +36,10 @@ export class SettingsPanel {
     darkMode: false,
     highContrast: false,
     focusModeEnabled: true,
-    pomodoroTimerEnabled: true
+    pomodoroTimerEnabled: true,
   });
 
   constructor() {
-    // Carrega os valores atuais do serviço quando o painel abre
     effect(() => {
       if (this.isOpen) {
         this.settingsForm.set({
@@ -50,21 +50,20 @@ export class SettingsPanel {
           darkMode: this.appState.darkMode(),
           highContrast: this.appState.highContrast(),
           focusModeEnabled: this.appState.focusModeEnabled(),
-          pomodoroTimerEnabled: this.appState.pomodoroTimerEnabled()
+          pomodoroTimerEnabled: this.appState.pomodoroTimerEnabled(),
         });
       }
     });
 
-    // Atualiza o serviço em tempo real conforme o form muda
     effect(() => {
       this.appState.updateSettings(this.settingsForm());
     });
   }
 
   updateField<K extends keyof SettingsForm>(field: K, value: SettingsForm[K]): void {
-    this.settingsForm.update(form => ({
+    this.settingsForm.update((form) => ({
       ...form,
-      [field]: value
+      [field]: value,
     }));
   }
 

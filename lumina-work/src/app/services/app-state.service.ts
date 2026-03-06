@@ -1,45 +1,38 @@
 import { Injectable, signal, effect } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppStateService {
   focusMode = signal(false);
   pomodoroEnabled = signal(true);
   openLists = signal(0);
 
-  // Settings signals - Acessibilidade Cognitiva
   clearReading = signal(false);
   lowAttention = signal(false);
   guidedSteps = signal(false);
-  
-  // Settings signals - Personalização Visual
+
   fontSize = signal<'small' | 'medium' | 'large'>('medium');
   darkMode = signal(false);
   highContrast = signal(false);
-  
-  // Settings signals - Foco e Produtividade
-  focusModeEnabled = signal(true); // controla se o botão aparece no header
-  pomodoroTimerEnabled = signal(true); // controla se o timer pomodoro aparece
+
+  focusModeEnabled = signal(true);
+  pomodoroTimerEnabled = signal(true);
 
   constructor() {
-    // Aplica classes ao body conforme as configurações mudam
     effect(() => {
       this.applyAccessibilityClasses();
     });
 
-    // Carrega as configurações salvas do localStorage
     this.loadSettings();
   }
 
-  // ============ MÉTODOS DE CONTROLE ============
-
   toggleFocusMode(): void {
-    this.focusMode.update(value => !value);
+    this.focusMode.update((value) => !value);
   }
 
   togglePomodoro(): void {
-    this.pomodoroEnabled.update(value => !value);
+    this.pomodoroEnabled.update((value) => !value);
   }
 
   setOpenLists(count: number): void {
@@ -49,8 +42,6 @@ export class AppStateService {
   hasOpenLists(): boolean {
     return this.openLists() > 0;
   }
-
-  // ============ ATUALIZAÇÃO DE CONFIGURAÇÕES ============
 
   updateSettings(settings: {
     clearReading: boolean;
@@ -71,41 +62,24 @@ export class AppStateService {
     this.focusModeEnabled.set(settings.focusModeEnabled);
     this.pomodoroTimerEnabled.set(settings.pomodoroTimerEnabled);
 
-    // Salva as configurações no localStorage
     this.saveSettings();
 
     console.log('[AppState] Configurações atualizadas:', settings);
   }
 
-  // ============ APLICAR CLASSES DE ACESSIBILIDADE ============
-
   private applyAccessibilityClasses(): void {
     const body = document.body;
 
-    // Acessibilidade Cognitiva
-    body.classList.toggle('mode-clear-reading', this.clearReading());
-    body.classList.toggle('mode-low-attention', this.lowAttention());
-    body.classList.toggle('mode-guided-steps', this.guidedSteps());
+    body.classList.toggle('clear-reading', this.clearReading());
+    body.classList.toggle('low-attention', this.lowAttention());
+    body.classList.toggle('guided-steps', this.guidedSteps());
 
-    // Personalização Visual
     body.classList.toggle('dark-mode', this.darkMode());
     body.classList.toggle('high-contrast', this.highContrast());
 
-    // Aplicar classe de tamanho de fonte
     body.classList.remove('font-small', 'font-medium', 'font-large');
     body.classList.add(`font-${this.fontSize()}`);
-
-    console.log('[AppState] Classes aplicadas:', {
-      clearReading: this.clearReading(),
-      lowAttention: this.lowAttention(),
-      guidedSteps: this.guidedSteps(),
-      fontSize: this.fontSize(),
-      darkMode: this.darkMode(),
-      highContrast: this.highContrast()
-    });
   }
-
-  // ============ PERSISTÊNCIA ============
 
   private saveSettings(): void {
     const settings = {
@@ -116,7 +90,7 @@ export class AppStateService {
       darkMode: this.darkMode(),
       highContrast: this.highContrast(),
       focusModeEnabled: this.focusModeEnabled(),
-      pomodoroTimerEnabled: this.pomodoroTimerEnabled()
+      pomodoroTimerEnabled: this.pomodoroTimerEnabled(),
     };
     localStorage.setItem('lumina_settings', JSON.stringify(settings));
   }
