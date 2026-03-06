@@ -12,7 +12,7 @@ import { SettingsForm } from '../../../domain/models/settingsFrom';
 })
 export class SettingsPanel {
   @Input() isOpen = false;
-  @Output() close = new EventEmitter<void>();
+  @Output() panelClose = new EventEmitter<void>();
   @Output() save = new EventEmitter<SettingsForm>();
 
   private appState = inject(AppStateService);
@@ -62,6 +62,6 @@ export class SettingsPanel {
 
   onClose(): void {
     this.save.emit(this.settingsForm());
-    this.close.emit();
+    this.panelClose.emit();
   }
 }

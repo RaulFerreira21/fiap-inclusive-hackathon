@@ -1,5 +1,5 @@
 @if (isOpen) {
-  <div class="overlay" (click)="onClose()"></div>
+  <div class="overlay" (click)="onClose()" (keyup.enter)="onClose()" tabindex="0" role="button" aria-label="Fechar configurações"></div>
 
   <aside class="panel open">
     <form (ngSubmit)="onClose()">

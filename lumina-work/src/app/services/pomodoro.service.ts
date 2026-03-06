@@ -6,7 +6,7 @@ const POMODORO_DURATION = 25 * 60; // 25 minutos em segundos
   providedIn: 'root'
 })
 export class PomodoroService {
-  private intervalId: any = null;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
 
   seconds = signal(POMODORO_DURATION);
   isRunning = signal(false);

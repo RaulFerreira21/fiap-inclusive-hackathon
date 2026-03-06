@@ -63,8 +63,8 @@
     [columns]="columnsSignal"
     [selectedTask]="selectedTask"
     [taskForm]="taskForm"
-    (close)="closeTaskModal()"
-    (save)="saveTask()">
+    (modalClose)="closeTaskModal()"
+    (modalSave)="saveTask()">
   </app-task-modal>
 
   <!-- Modal de Lista -->
@@ -72,7 +72,7 @@
     [isOpen]="showListModal"
     [selectedColumn]="selectedColumn"
     [listForm]="listForm"
-    (close)="closeListModal()"
-    (save)="saveList()">
+    (modalClose)="closeListModal()"
+    (modalSave)="saveList()">
   </app-list-modal>
 </div>

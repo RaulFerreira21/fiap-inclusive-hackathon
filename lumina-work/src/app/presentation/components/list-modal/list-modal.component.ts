@@ -22,16 +22,16 @@ export class ListModalComponent {
     color: '#E8F0FE'
   });
 
-  @Output() close = new EventEmitter<void>();
-  @Output() save = new EventEmitter<void>();
+  @Output() modalClose = new EventEmitter<void>();
+  @Output() modalSave = new EventEmitter<void>();
 
   hideAnimations = this.appState.hideAnimations;
 
   onClose(): void {
-    this.close.emit();
+    this.modalClose.emit();
   }
 
   onSave(): void {
-    this.save.emit();
+    this.modalSave.emit();
   }
 }

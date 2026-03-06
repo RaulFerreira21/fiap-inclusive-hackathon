@@ -1,10 +1,14 @@
   <div 
   class="modal-overlay" 
   (click)="onClose()"
+  (keyup.enter)="onClose()"
+  tabindex="0"
+  role="button"
+  aria-label="Fechar modal"
   [class.open]="isOpen()"
   [class.no-animation]="hideAnimations()"
   >
-    <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-content" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
       <h2 class="modal-title">
         {{ selectedTask() ? 'Editar' : 'Nova' }} Atividade
       </h2>
@@ -18,9 +22,9 @@
             [ngModel]="taskForm().columnId"
             (ngModelChange)="taskForm().columnId = $event"
             class="column-select">
-            <option *ngFor="let column of columns()" [value]="column.columnId">
-              {{ column.name }}
-            </option>
+            @for (column of columns(); track column.columnId) {
+              <option [value]="column.columnId">{{ column.name }}</option>
+            }
           </select>
         </div>
       }
@@ -33,9 +37,9 @@
           [ngModel]="taskForm().columnId"
           (ngModelChange)="taskForm().columnId = $event"
           class="column-select">
-          <option *ngFor="let column of columns()" [value]="column.columnId">
-            {{ column.name }}
-          </option>
+          @for (column of columns(); track column.columnId) {
+            <option [value]="column.columnId">{{ column.name }}</option>
+          }
         </select>
       </div>
     }
@@ -48,7 +52,7 @@
         [ngModel]="taskForm().name"
         (ngModelChange)="taskForm().name = $event"
         placeholder="Ex: Criar apresentação"
-        autofocus>
+       >
     </div>
 
     <div class="form-group">

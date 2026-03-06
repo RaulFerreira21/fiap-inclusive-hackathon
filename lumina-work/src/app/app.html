@@ -1,11 +1,11 @@
 ﻿<div class="app-container">
   @if (showLayout()) {
-    <app-header (onOpenSettings)="handleOpenSettings()"></app-header>
+    <app-header (settingsOpened)="handleOpenSettings()"></app-header>
   }
     <router-outlet></router-outlet>
   @if (showLayout()) {
     <app-footer></app-footer>
   }
 
-  <app-settings-panel [isOpen]="settingsOpen" (close)="handleCloseSettings()"> </app-settings-panel>
+  <app-settings-panel [isOpen]="settingsOpen" (panelClose)="handleCloseSettings()"> </app-settings-panel>
 </div>

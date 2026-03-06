@@ -2,8 +2,12 @@
   class="modal-overlay"
   [class.open]="isOpen()"
   [class.no-animation]="hideAnimations()"
-  (click)="onClose()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+  (click)="onClose()"
+  (keyup.enter)="onClose()"
+  tabindex="0"
+  role="button"
+  aria-label="Fechar modal">
+  <div class="modal-content" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()" tabindex="0">
     <h2 class="modal-title">
       {{ selectedColumn() ? 'Editar' : 'Nova' }} Lista
     </h2>
@@ -16,7 +20,7 @@
         [ngModel]="listForm().name"
         (ngModelChange)="listForm().name = $event"
         placeholder="Ex: Em andamento"
-        autofocus>
+       >
     </div>
 
     <div class="form-group">

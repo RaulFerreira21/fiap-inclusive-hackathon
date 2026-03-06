@@ -76,7 +76,7 @@ export class AppStateService {
     // Salva as configurações no localStorage
     this.saveSettings();
 
-    console.log('[AppState] Configurações atualizadas:', settings);
+    console.warn('[AppState] Configurações atualizadas:', settings);
   }
 
   // ============ APLICAR CLASSES DE ACESSIBILIDADE ============

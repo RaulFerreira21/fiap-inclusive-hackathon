@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ export class OnboardingComponent {
   currentStep = signal(0);
   focusActivity = signal('');
 
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   nextStep(): void {
     if (this.currentStep() < 2) {

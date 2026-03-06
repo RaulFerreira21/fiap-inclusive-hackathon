@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Column } from '../../../domain/models/column';
@@ -17,7 +17,7 @@ import { TaskModalComponent } from '../../components/task-modal/task-modal.compo
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private boardService = inject(BoardService);
   private appStateService = inject(AppStateService);
 
@@ -83,9 +83,7 @@ export class DashboardComponent implements OnInit {
   protected readonly ListModal = ListModalComponent;
   protected readonly Board = BoardComponent;
 
-  ngOnInit(): void {}
-
-  onToggleColumnCollapse(columnId: string): void {
+  onToggleColumnCollapse(_columnId: string): void {
     // Update openLists count when column collapse state changes
     const openCount = this.columns.length;
     this.appStateService.setOpenLists(openCount);
