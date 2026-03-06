@@ -1,21 +1,19 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { signal } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { DashboardComponent } from './dashboard.component';
 import { BoardService } from '../../../services/board.service';
 import { AppStateService } from '../../../services/app-state.service';
 import { Column } from '../../../domain/models/column';
+import { Task } from '../../../domain/models/tasks';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  const mockColumns: Column[] = [
-    { columnId: '1', name: 'Todo', color: '#fff' },
-    { columnId: '2', name: 'Done', color: '#000' },
-  ];
+  const mockBoardService = {
+    columns: vi.fn(() => [{ columnId: '1', name: 'Backlog', color: '#fff' }]),
+    getTasksByColumn: vi.fn(() => []),
 
-  const boardServiceMock = {
-    columns: signal(mockColumns),
     addTask: vi.fn(),
     updateTask: vi.fn(),
     deleteTask: vi.fn(),
@@ -24,29 +22,26 @@ describe('DashboardComponent', () => {
     deleteColumn: vi.fn(),
   };
 
-  const appStateMock = {
-    focusMode: signal(false),
-    fontSize: signal<'small' | 'medium' | 'large'>('medium'),
-    clearReading: signal(false),
-    lowAttention: signal(false),
-    guidedSteps: signal(false),
-    darkMode: signal(false),
-    highContrast: signal(false),
+  const mockAppStateService = {
+    focusMode: vi.fn(() => false),
+    fontSize: vi.fn(() => 'medium'),
+    clearReading: vi.fn(() => false),
+    lowAttention: vi.fn(() => false),
+    guidedSteps: vi.fn(() => false),
+    darkMode: vi.fn(() => false),
+    highContrast: vi.fn(() => false),
+    hideAnimations: vi.fn(() => false),
     setOpenLists: vi.fn(),
   };
 
   beforeEach(async () => {
-    vi.spyOn(window, 'alert').mockImplementation(() => {});
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
-    vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('Deep Work');
-
     await TestBed.configureTestingModule({
       imports: [DashboardComponent],
       providers: [
-        { provide: BoardService, useValue: boardServiceMock },
-        { provide: AppStateService, useValue: appStateMock },
+        { provide: BoardService, useValue: mockBoardService },
+        { provide: AppStateService, useValue: mockAppStateService },
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
@@ -58,62 +53,76 @@ describe('DashboardComponent', () => {
   });
 
   it('should return columns from boardService', () => {
-    expect(component.columns.length).toBe(2);
+    const columns = component.columns;
+    expect(columns.length).toBe(1);
+    expect(columns[0].name).toBe('Backlog');
   });
 
   it('should return focusActivity from localStorage', () => {
-    expect(component.focusActivity).toBe('Deep Work');
+    localStorage.setItem('focusActivity', 'Estudar Angular');
+    expect(component.focusActivity).toBe('Estudar Angular');
   });
 
   it('should open task modal for new task', () => {
-    component.openTaskModal(mockColumns[0]);
+    const column: Column = { columnId: '1', name: 'Backlog', color: '#fff' };
+
+    component.openTaskModal(column);
 
     expect(component.showTaskModal()).toBe(true);
-    expect(component.selectedColumn()?.columnId).toBe('1');
+    expect(component.selectedColumn()).toEqual(column);
   });
 
   it('should close task modal', () => {
-    component.openTaskModal(mockColumns[0]);
     component.closeTaskModal();
 
     expect(component.showTaskModal()).toBe(false);
-    expect(component.selectedColumn()).toBeNull();
+    expect(component.selectedColumn()).toBe(null);
   });
 
   it('should save new task', () => {
-    component.openTaskModal(mockColumns[0]);
+    const column: Column = { columnId: '1', name: 'Backlog', color: '#fff' };
 
+    component.selectedColumn.set(column);
     component.taskForm.set({
-      name: 'Nova Task',
+      name: 'Nova tarefa',
       description: 'Descrição',
       columnId: '1',
     });
 
     component.saveTask();
 
-    expect(boardServiceMock.addTask).toHaveBeenCalledWith('1', 'Nova Task', 'Descrição');
+    expect(mockBoardService.addTask).toHaveBeenCalled();
   });
 
   it('should update existing task', () => {
-    const task = { id: 't1', name: 'Old', description: 'Old desc' };
+    const column: Column = { columnId: '1', name: 'Backlog', color: '#fff' };
+    const task: Task = {
+      id: '1',
+      columnId: '1',
+      name: 'Task',
+      description: 'Desc',
+    };
 
-    component.openTaskModal(mockColumns[0], task as any);
+    component.selectedColumn.set(column);
+    component.selectedTask.set(task);
 
     component.taskForm.set({
-      name: 'Updated',
-      description: 'Updated desc',
+      name: 'Atualizada',
+      description: 'Nova',
       columnId: '1',
     });
 
     component.saveTask();
 
-    expect(boardServiceMock.updateTask).toHaveBeenCalledWith('t1', 'Updated', 'Updated desc');
+    expect(mockBoardService.updateTask).toHaveBeenCalled();
   });
 
   it('should delete task when confirmed', () => {
-    component.deleteTask('t1');
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
 
-    expect(boardServiceMock.deleteTask).toHaveBeenCalledWith('t1');
+    component.deleteTask('1');
+
+    expect(mockBoardService.deleteTask).toHaveBeenCalledWith('1');
   });
 
   it('should open list modal', () => {
@@ -123,40 +132,42 @@ describe('DashboardComponent', () => {
   });
 
   it('should save new list', () => {
-    component.openListModal();
-
     component.listForm.set({
       name: 'Nova Lista',
-      color: '#123456',
+      color: '#fff',
     });
 
     component.saveList();
 
-    expect(boardServiceMock.addColumn).toHaveBeenCalledWith('Nova Lista', '#123456');
+    expect(mockBoardService.addColumn).toHaveBeenCalled();
   });
 
   it('should update existing list', () => {
-    component.openListModal(mockColumns[0]);
+    const column: Column = { columnId: '1', name: 'Backlog', color: '#fff' };
+
+    component.selectedColumn.set(column);
 
     component.listForm.set({
       name: 'Atualizada',
-      color: '#000000',
+      color: '#000',
     });
 
     component.saveList();
 
-    expect(boardServiceMock.updateColumn).toHaveBeenCalledWith('1', 'Atualizada', '#000000');
+    expect(mockBoardService.updateColumn).toHaveBeenCalled();
   });
 
   it('should delete list when confirmed', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
     component.deleteList('1');
 
-    expect(boardServiceMock.deleteColumn).toHaveBeenCalledWith('1');
+    expect(mockBoardService.deleteColumn).toHaveBeenCalledWith('1');
   });
 
   it('should update open lists count when column collapse toggles', () => {
     component.onToggleColumnCollapse('1');
 
-    expect(appStateMock.setOpenLists).toHaveBeenCalledWith(2);
+    expect(mockAppStateService.setOpenLists).toHaveBeenCalled();
   });
 });

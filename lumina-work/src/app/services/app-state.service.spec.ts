@@ -60,8 +60,9 @@ describe('AppStateService', () => {
       guidedSteps: true,
       darkMode: true,
       highContrast: true,
-      focusModeEnabled: false,
-      pomodoroTimerEnabled: false,
+      focusModeEnabled: true,
+      pomodoroTimerEnabled: true,
+      hideAnimations: false,
     });
 
     expect(service.clearReading()).toBe(true);
@@ -80,6 +81,7 @@ describe('AppStateService', () => {
       highContrast: true,
       focusModeEnabled: true,
       pomodoroTimerEnabled: true,
+      hideAnimations: false,
     });
 
     await new Promise((r) => setTimeout(r));

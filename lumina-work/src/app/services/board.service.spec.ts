@@ -6,6 +6,8 @@ describe('BoardService', () => {
   let service: BoardService;
 
   beforeEach(() => {
+    TestBed.resetTestingModule();
+    vi.restoreAllMocks();
     localStorage.clear();
 
     TestBed.configureTestingModule({
@@ -19,20 +21,24 @@ describe('BoardService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should create default column if none in storage', () => {
+  it('should create default columns if none in storage', () => {
     const columns = service.columns();
 
-    expect(columns.length).toBe(1);
-    expect(columns[0].name).toBe('A Fazeres');
+    expect(columns.length).toBe(3);
+    expect(columns[0].name).toBe('Backlog');
+    expect(columns[1].name).toBe('Desenvolvimento');
+    expect(columns[2].name).toBe('Concluídas');
   });
 
   it('should add a column', () => {
+    const initialLength = service.columns().length;
+
     service.addColumn('Em Progresso', '#FFF');
 
     const columns = service.columns();
 
-    expect(columns.length).toBe(2);
-    expect(columns[1].name).toBe('Em Progresso');
+    expect(columns.length).toBe(initialLength + 1);
+    expect(columns[columns.length - 1].name).toBe('Em Progresso');
   });
 
   it('should update a column', () => {
@@ -48,10 +54,11 @@ describe('BoardService', () => {
 
   it('should delete a column', () => {
     const columnId = service.columns()[0].columnId;
+    const initialLength = service.columns().length;
 
     service.deleteColumn(columnId);
 
-    expect(service.columns().length).toBe(0);
+    expect(service.columns().length).toBe(initialLength - 1);
   });
 
   it('should add a task', () => {
