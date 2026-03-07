@@ -27,7 +27,6 @@ describe('SettingsPanel', () => {
 
     fixture = TestBed.createComponent(SettingsPanel);
     component = fixture.componentInstance;
-    (component as any).appState = appStateMock;
 
     fixture.detectChanges();
   });

@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { DashboardComponent } from './dashboard.component';
 import { BoardService } from '../../../services/board.service';
 import { AppStateService } from '../../../services/app-state.service';
+import { GuidedStepsService } from '../../../services/guided-steps.service';
 import { Column } from '../../../domain/models/column';
 import { Task } from '../../../domain/models/tasks';
 
@@ -13,10 +14,13 @@ describe('DashboardComponent', () => {
   const mockBoardService = {
     columns: vi.fn(() => [{ columnId: '1', name: 'Backlog', color: '#fff' }]),
     getTasksByColumn: vi.fn(() => []),
+    getColumnsWithPendingTasks: vi.fn(() => []),
+    isColumnCollapsed: vi.fn(() => false),
 
     addTask: vi.fn(),
     updateTask: vi.fn(),
     deleteTask: vi.fn(),
+    toggleTaskComplete: vi.fn(),
     addColumn: vi.fn(),
     updateColumn: vi.fn(),
     deleteColumn: vi.fn(),
@@ -24,6 +28,7 @@ describe('DashboardComponent', () => {
 
   const mockAppStateService = {
     focusMode: vi.fn(() => false),
+    focusModeEnabled: vi.fn(() => true),
     fontSize: vi.fn(() => 'medium'),
     clearReading: vi.fn(() => false),
     lowAttention: vi.fn(() => false),
@@ -32,6 +37,13 @@ describe('DashboardComponent', () => {
     highContrast: vi.fn(() => false),
     hideAnimations: vi.fn(() => false),
     setOpenLists: vi.fn(),
+    setFocusMode: vi.fn(),
+  };
+
+  const mockGuidedStepsService = {
+    currentStep: vi.fn(() => 0),
+    nextStep: vi.fn(),
+    resetSteps: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -40,6 +52,7 @@ describe('DashboardComponent', () => {
       providers: [
         { provide: BoardService, useValue: mockBoardService },
         { provide: AppStateService, useValue: mockAppStateService },
+        { provide: GuidedStepsService, useValue: mockGuidedStepsService },
       ],
     });
 

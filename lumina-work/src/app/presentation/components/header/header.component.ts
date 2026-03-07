@@ -1,7 +1,9 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, effect, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppStateService } from '../../../services/app-state.service';
+import { BoardService } from '../../../services/board.service';
 import { PomodoroService } from '../../../services/pomodoro.service';
+import { GuidedStepsService } from '../../../services/guided-steps.service';
 
 
 @Component({
@@ -13,9 +15,23 @@ import { PomodoroService } from '../../../services/pomodoro.service';
 })
 export class HeaderComponent {
   @Output() settingsOpened = new EventEmitter<void>();
+  @Output() guidedStepAdvanced = new EventEmitter<void>();
+  @ViewChild('settingsButton') settingsButton?: ElementRef<HTMLButtonElement>;
 
   private pomodoroService = inject(PomodoroService);
   private appStateService = inject(AppStateService);
+  private boardService = inject(BoardService);
+  private guidedStepsService = inject(GuidedStepsService);
+
+  private focusSettingsStepEffect = effect(() => {
+    if (this.guidedStepsActive && this.currentGuidedStep === 3) {
+      queueMicrotask(() => this.settingsButton?.nativeElement.focus());
+    }
+  });
+
+  get currentGuidedStep(): number {
+    return this.guidedStepsService.currentStep();
+  }
 
   get pomodoroTime(): string {
     return this.pomodoroService.formatTime();
@@ -42,7 +58,11 @@ export class HeaderComponent {
   }
 
   get canToggleFocus(): boolean {
-    return this.appStateService.hasOpenLists();
+    return this.boardService.hasExpandedColumnsWithPendingTasks();
+  }
+
+  get guidedStepsActive(): boolean {
+    return this.appStateService.guidedSteps();
   }
 
   togglePomodoro(): void {
@@ -50,10 +70,43 @@ export class HeaderComponent {
   }
 
   toggleFocusMode(): void {
+    if (!this.canToggleFocus) {
+      this.showToast('expanda uma lista com tarefas não realizadas para entrar em modo foco');
+      return;
+    }
+    
     this.appStateService.toggleFocusMode();
   }
 
   openSettings(): void {
     this.settingsOpened.emit();
+  }
+
+  nextGuidedStep(): void {
+    this.guidedStepsService.nextStep();
+    this.guidedStepAdvanced.emit();
+  }
+
+  private showToast(message: string): void {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = message;
+    
+    // Adicionar ao body
+    document.body.appendChild(toast);
+    
+    // Forçar reflow para animação
+    void toast.offsetHeight;
+    
+    // Mostrar toast
+    toast.classList.add('show');
+    
+    // Remover após 3 segundos
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 300); // Tempo da transição
+    }, 3000);
   }
 }

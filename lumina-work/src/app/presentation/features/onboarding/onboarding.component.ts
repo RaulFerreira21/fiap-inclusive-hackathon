@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppStateService } from '../../../services/app-state.service';
 
 @Component({
   selector: 'app-onboarding',
@@ -11,10 +12,11 @@ import { Router } from '@angular/router';
   styleUrl: './onboarding.component.scss',
 })
 export class OnboardingComponent {
+  private router = inject(Router);
+  private appStateService = inject(AppStateService);
+
   currentStep = signal(0);
   focusActivity = signal('');
-
-  private router = inject(Router);
 
   nextStep(): void {
     if (this.currentStep() < 2) {
@@ -38,6 +40,10 @@ export class OnboardingComponent {
 
     localStorage.setItem('onboardingComplete', 'true');
 
+    // No primeiro acesso apos onboarding, iniciar os passos guiados ativos
+    this.appStateService.activateGuidedSteps();
+    
+    // Navegar para o dashboard
     this.router.navigate(['/dashboard']);
   }
 

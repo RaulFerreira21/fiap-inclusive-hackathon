@@ -8,9 +8,11 @@ import { Task } from '../domain/models/tasks';
 export class BoardService {
   private readonly STORAGE_KEY_COLUMNS = 'lumina_columns';
   private readonly STORAGE_KEY_TASKS = 'lumina_tasks';
+  private readonly STORAGE_KEY_COLLAPSED = 'lumina_collapsed_columns';
 
   columns = signal<Column[]>([]);
   tasks = signal<Task[]>([]);
+  collapsedColumns = signal<Set<string>>(new Set());
 
   constructor() {
     this.loadFromStorage();
@@ -19,6 +21,7 @@ export class BoardService {
   private loadFromStorage(): void {
     const savedColumns = localStorage.getItem(this.STORAGE_KEY_COLUMNS);
     const savedTasks = localStorage.getItem(this.STORAGE_KEY_TASKS);
+    const savedCollapsed = localStorage.getItem(this.STORAGE_KEY_COLLAPSED);
 
     if (savedColumns) {
       this.columns.set(JSON.parse(savedColumns));
@@ -36,6 +39,15 @@ export class BoardService {
     if (savedTasks) {
       this.tasks.set(JSON.parse(savedTasks));
     }
+
+    if (savedCollapsed) {
+      try {
+        const collapsedArray = JSON.parse(savedCollapsed);
+        this.collapsedColumns.set(new Set(collapsedArray));
+      } catch (e) {
+        console.error('[BoardService] Erro ao carregar estado de colapso:', e);
+      }
+    }
   }
 
   private saveColumns(): void {
@@ -46,6 +58,11 @@ export class BoardService {
     localStorage.setItem(this.STORAGE_KEY_TASKS, JSON.stringify(this.tasks()));
   }
 
+  private saveCollapsedState(): void {
+    localStorage.setItem(this.STORAGE_KEY_COLLAPSED, JSON.stringify(Array.from(this.collapsedColumns())));
+  }
+
+  // CRUD de Colunas
   addColumn(name: string, color: string): void {
     const newColumn: Column = {
       columnId: this.generateId(),
@@ -101,8 +118,55 @@ export class BoardService {
     this.saveTasks();
   }
 
+  toggleTaskComplete(taskId: string): void {
+    this.tasks.update(tasks =>
+      tasks.map(task =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
+    this.saveTasks();
+  }
+
   getTasksByColumn(columnId: string): Task[] {
     return this.tasks().filter((task) => task.columnId === columnId);
+  }
+
+  getUncompletedTasksByColumn(columnId: string): Task[] {
+    return this.tasks().filter(task => task.columnId === columnId && !task.completed);
+  }
+
+  getColumnsWithPendingTasks(): Column[] {
+    return this.columns().filter(column => {
+      const pendingTasks = this.getUncompletedTasksByColumn(column.columnId);
+      return pendingTasks.length > 0;
+    });
+  }
+
+  // Métodos para gerenciar estado de colapso das colunas
+  toggleColumnCollapse(columnId: string): void {
+    const current = new Set(this.collapsedColumns());
+    if (current.has(columnId)) {
+      current.delete(columnId);
+    } else {
+      current.add(columnId);
+    }
+    this.collapsedColumns.set(current);
+    this.saveCollapsedState();
+  }
+
+  isColumnCollapsed(columnId: string): boolean {
+    return this.collapsedColumns().has(columnId);
+  }
+
+  // Verifica se há colunas expandidas com tarefas pendentes
+  hasExpandedColumnsWithPendingTasks(): boolean {
+    return this.columns().some(column => {
+      const isCollapsed = this.isColumnCollapsed(column.columnId);
+      if (isCollapsed) return false; // Se está colapsada, não conta
+      
+      const pendingTasks = this.getUncompletedTasksByColumn(column.columnId);
+      return pendingTasks.length > 0;
+    });
   }
 
   private generateId(): string {

@@ -1,12 +1,13 @@
 <div class="board-columns">
-  @for (column of columns(); track column.columnId) {
+  @for (column of visibleColumns; track column.columnId) {
     <div 
       class="column"
       [class.column--collapsed]="isCollapsed(column.columnId)"
+      [class.no-animations]="hideAnimations"
       [style.background-color]="column.color">
 
       <!-- Estado colapsado -->
-      @if (isCollapsed(column.columnId)) {
+      @if (isCollapsed(column.columnId) && !focusMode) {
         <div class="column-collapsed-content">
           <button
             class="btn-expand"
@@ -15,13 +16,13 @@
             &#x2192;&#x007C;
           </button>
           <span class="column-collapsed-title">
-            {{ column.name }} ({{ getTasksByColumn(column.columnId).length }})
+            {{ column.name }} ({{ getVisibleTasksByColumn(column.columnId).length }})
           </span>
         </div>
       }
 
       <!-- Estado expandido -->
-      @if (!isCollapsed(column.columnId)) {
+      @if (!isCollapsed(column.columnId) || focusMode) {
         <div class="column-expanded">
           <!-- Cabeçalho da coluna -->
           <div class="column-header">
@@ -64,37 +65,37 @@
 
           <!-- Cards de tarefas -->
           <div class="tasks-container">
-            @for (task of getTasksByColumn(column.columnId); track task.id) {
-              <div class="task-card">
+            @for (task of getVisibleTasksByColumn(column.columnId); track task.id) {
+              <div class="task-card" [class.task-completed]="task.completed">
                 <div class="task-header">
+                  <input 
+                    type="checkbox" 
+                    class="task-checkbox"
+                    [checked]="task.completed"
+                    (change)="onToggleTaskComplete(task.id)"
+                    [attr.aria-label]="'Marcar ' + task.name + ' como ' + (task.completed ? 'não concluída' : 'concluída')">
                   <h4 class="task-name">{{ task.name }}</h4>
                   <div class="task-actions">
-                    <button
-                      class="btn-task-icon"
-                      (click)="onEditTask(column, task)"
-                      title="Editar"
-                      tabindex="0"
-                      aria-label="Editar tarefa"
-                      (keydown.enter)="onEditTask(column, task)"
-                      (keydown.space)="onEditTask(column, task)">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                      </svg>
-                    </button>
-                    <button
-                      class="btn-task-icon delete"
-                      (click)="onDeleteTask(task.id)"
-                      title="Excluir"
-                      tabindex="0"
-                      aria-label="Excluir tarefa"
-                      (keydown.enter)="onDeleteTask(task.id)"
-                      (keydown.space)="onDeleteTask(task.id)">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"/>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                      </svg>
-                    </button>
+                    @if (!focusMode) {
+                      <button
+                        class="btn-task-icon"
+                        (click)="onEditTask(column, task)"
+                        title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                      <button
+                        class="btn-task-icon delete"
+                        (click)="onDeleteTask(task.id)"
+                        title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <polyline points="3 6 5 6 21 6"/>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                      </button>
+                    }
                   </div>
                 </div>
                 @if (task.description) {
@@ -104,9 +105,11 @@
             }
 
             <!-- Botão adicionar atividade -->
-            <button class="btn-add-task" (click)="onAddTask(column)" tabindex="0" aria-label="Adicionar atividade" (keydown.enter)="onAddTask(column)" (keydown.space)="onAddTask(column)">
-              <span>+</span> Adicionar atividade
-            </button>
+            @if (!focusMode) {
+              <button class="btn-add-task" (click)="onAddTask(column)">
+                <span>+</span> Adicionar atividade
+              </button>
+            }
           </div>
         </div>
       }

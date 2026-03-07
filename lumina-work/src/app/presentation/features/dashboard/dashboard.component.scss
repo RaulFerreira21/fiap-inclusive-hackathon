@@ -4,6 +4,130 @@
   margin: 0 auto;
 }
 
+/* Step do Modo Guiado - Dashboard */
+.guided-step-container {
+  position: relative;
+  margin-bottom: 1rem;
+  height: 0;
+}
+
+.guided-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.75rem;
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 280px;
+  max-width: 290px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.guided-dashboard-tooltip {
+  width: 100%;
+  transform: translateX(0);
+}
+
+.guided-tooltip .tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.guided-tooltip .tooltip-message {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.guided-tooltip .guided-next-btn {
+  background: none;
+  border: none;
+  color: #6366f1;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: right;
+  align-self: flex-end;
+  margin-top: 0.5rem;
+
+  &:hover {
+    color: #4f46e5;
+  }
+
+  &:active {
+    opacity: 0.7;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+}
+
+.guided-tooltip .tooltip-arrow {
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid #1f2937;
+}
+
+/* Dark mode support */
+:host-context(.dark-mode) .guided-tooltip {
+  background-color: #374151;
+  color: #e5e7eb;
+
+  .tooltip-arrow {
+    border-bottom-color: #374151;
+  }
+}
+
+/* High contrast support */
+:host-context(.high-contrast) .guided-tooltip {
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #fff;
+
+  .tooltip-arrow {
+    border-bottom-color: #000;
+  }
+}
+
+/* Low attention mode support */
+:host-context(.mode-low-attention) .guided-tooltip {
+  padding: calc(0.875rem + 4px) calc(1rem + 4px);
+
+  .tooltip-message {
+    font-size: calc(0.875rem + 4px);
+  }
+}
+
+/* Animação de entrada */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 .dashboard-container.dark-mode {
   background-color: #0f1724;
   color: #e5e7eb;
@@ -51,7 +175,16 @@
 .dashboard-container.high-contrast {
   background-color: #000;
   color: #fff;
-  .focus-banner { background: #000; border: 2px solid #fff; }
+  .focus-banner { 
+    background: #000; border: 2px solid #fff; 
+    
+    .focus-label{
+      color: #f1f1f1;
+    }
+    .focus-activity{
+      color: #f1f1f1;
+    }
+  }
   .column { background-color: #000; border: 2px solid #fff; }
   .task-card { background-color: #000; border: 1px solid #fff; color: #fff; }
   .btn-new-activity { background-color: #fff; color: #000; border: 2px solid #fff; }

@@ -91,3 +91,53 @@ body.high-contrast .slider {
   background-color: #000;
   border: 2px solid #fff;
 }
+
+/* modo low attention */
+body.mode-low-attention {
+  font-size: calc(16px + 4px); /* aumenta fonte base em 4px */
+}
+
+body.mode-low-attention .column {
+  width: calc(300px + 20px); /* aumenta largura das colunas em 20px */
+  min-height: calc(400px + 20px); /* aumenta altura mínima das colunas em 20px */
+}
+
+body.mode-low-attention .task-card {
+  padding: calc(12px + 4px); /* aumenta padding dos cards de tarefa em 4px */
+  margin-bottom: calc(8px + 4px); /* aumenta margem inferior dos cards em 4px */
+  font-size: calc(14px + 4px); /* aumenta fonte dos cards em 4px */
+}
+
+body.mode-low-attention .task-title {
+  font-size: calc(16px + 4px); /* aumenta fonte do título das tarefas em 4px */
+  font-weight: 600;
+}
+
+body.mode-low-attention .task-description {
+  font-size: calc(14px + 4px); /* aumenta fonte da descrição das tarefas em 4px */
+}
+
+body.mode-low-attention .btn,
+body.mode-low-attention button {
+  padding: calc(8px + 4px) calc(16px + 4px); /* aumenta padding dos botões em 4px */
+  font-size: calc(14px + 4px); /* aumenta fonte dos botões em 4px */
+}
+
+/* Exceção para o botão pomodoro - não deve ser afetado pelo modo low attention */
+body.mode-low-attention .pomodoro-pill .pomodoro-toggle {
+  padding: 0px !important; 
+  font-size: 14px !important;
+}
+
+body.mode-low-attention .modal-content {
+  padding: calc(24px + 8px); /* aumenta padding do modal em 8px */
+}
+
+body.mode-low-attention .panel {
+  padding: calc(16px + 4px); /* aumenta padding dos painéis em 4px */
+}
+
+body.mode-low-attention .focus-banner {
+  padding: calc(12px + 4px) calc(16px + 4px); /* aumenta padding do banner de foco em 4px */
+  font-size: calc(16px + 4px); /* aumenta fonte do banner em 4px */
+}

@@ -41,6 +41,10 @@
     padding: 0.75rem 0;
     align-items: center;
   }
+
+  &.no-animations {
+    transition: none;
+  }
 }
 
 .column-collapsed-content {
@@ -245,7 +249,7 @@
 }
 
 :host-context(.dashboard-container.dark-mode) .column-title {
-  color: #e5e7eb;
+  color: #111;
 }
 
 :host-context(.dashboard-container.dark-mode) .task-card {
@@ -276,7 +280,7 @@
 :host-context(.dashboard-container.high-contrast) .column-collapsed-title,
 :host-context(.dashboard-container.high-contrast) .btn-expand,
 :host-context(.dashboard-container.high-contrast) .column-title {
-  color: #fff;
+  color: #111;
 }
 
 :host-context(.dashboard-container.high-contrast) .task-card {
@@ -293,4 +297,34 @@
   background: #000;
   border: 2px solid #fff;
   color: #fff;
+}
+
+.task-checkbox {
+  margin-top: 0.25rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.task-card.task-completed {
+  opacity: 0.6;
+  background-color: #f3f4f6;
+}
+
+.task-card.task-completed .task-name {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+:host-context(.dashboard-container.dark-mode) .task-card.task-completed {
+  background-color: #1f2937;
+}
+
+:host-context(.dashboard-container.dark-mode) .task-card.task-completed .task-name {
+  color: #6b7280;
+}
+
+:host-context(.dashboard-container.high-contrast) .task-card.task-completed {
+  opacity: 1;
 }

@@ -2,13 +2,35 @@
      [class.font-large]="fontSize === 'large'"
      [class.dark-mode]="darkMode"
      [class.high-contrast]="highContrast">
+  
+  <!-- Step 2 do Modo Guiado - Dashboard -->
+  @if (guidedSteps && currentGuidedStep === 1) {
+    <div class="guided-step-container">
+      <div class="guided-tooltip guided-dashboard-tooltip">
+        <div class="tooltip-content">
+          <p class="tooltip-message">Aqui fica a área de trabalho, onde você pode criar suas listas de tarefas e controlar o fluxo do seu trabalho</p>
+        </div>
+        <button 
+          type="button" 
+          class="guided-next-btn"
+          (click)="nextGuidedStep()"
+          aria-label="Próximo passo">
+          Próximo
+        </button>
+        <div class="tooltip-arrow"></div>
+      </div>
+    </div>
+  }
+
   <!-- Banner de foco (se existir) -->
   @if (!focusMode && focusActivity) {
     <div class="focus-banner">
       <div class="focus-content">
         <span class="focus-icon">🎯</span>
         <div>
-          <p class="focus-label">Projeto atual:</p>
+          @if (!lowAttention) {
+            <p class="focus-label">Projeto atual:</p>
+          }
           <p class="focus-activity">{{ focusActivity }}</p>
         </div>
       </div>
@@ -48,13 +70,14 @@
     [columns]="columnsSignal"
     [focusMode]="focusMode"
     [focusActivity]="focusActivity"
-    (toggleColumnCollapse)="onToggleColumnCollapse($event)"
+    [hideAnimations]="hideAnimations"
     (addColumn)="openListModal()"
     (editColumn)="openListModal($event)"
     (deleteColumn)="deleteList($event)"
     (addTask)="openTaskModal($event)"
     (editTask)="openTaskModal($event.column, $event.task)"
-    (deleteTask)="deleteTask($event)">
+    (deleteTask)="deleteTask($event)"
+    (toggleTaskComplete)="toggleTaskComplete($event)">
   </app-board>
 
   <!-- Modal de Tarefa -->

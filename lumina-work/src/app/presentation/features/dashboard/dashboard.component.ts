@@ -1,10 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Column } from '../../../domain/models/column';
 import { Task } from '../../../domain/models/tasks';
 import { AppStateService } from '../../../services/app-state.service';
 import { BoardService } from '../../../services/board.service';
+import { GuidedStepsService } from '../../../services/guided-steps.service';
 import { BoardComponent } from '../../components/board/board.component';
 import { ListModalComponent } from '../../components/list-modal/list-modal.component';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
@@ -17,9 +18,10 @@ import { TaskModalComponent } from '../../components/task-modal/task-modal.compo
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   private boardService = inject(BoardService);
   private appStateService = inject(AppStateService);
+  private guidedStepsService = inject(GuidedStepsService);
 
   showTaskModal = signal(false);
   showListModal = signal(false);
@@ -58,6 +60,10 @@ export class DashboardComponent {
     return this.appStateService.guidedSteps();
   }
 
+  get currentGuidedStep(): number {
+    return this.guidedStepsService.currentStep();
+  }
+
   get darkMode(): boolean {
     return this.appStateService.darkMode();
   }
@@ -66,6 +72,15 @@ export class DashboardComponent {
     return this.appStateService.highContrast();
   }
 
+  get hideAnimations(): boolean {
+    return this.appStateService.hideAnimations();
+  }
+
+  get focusModeEnabled(): boolean {
+    return this.appStateService.focusModeEnabled();
+  }
+
+  // ============ GETTERS DO BoardService ============
   get columns(): Column[] {
     return this.boardService.columns();
   }
@@ -85,6 +100,20 @@ export class DashboardComponent {
     // Update openLists count when column collapse state changes
     const openCount = this.columns.length;
     this.appStateService.setOpenLists(openCount);
+  }
+  ngOnInit(): void {
+    // Verifica se deve ativar o modo foco automaticamente
+    this.checkFocusModeActivation();
+  }
+
+  private checkFocusModeActivation(): void {
+    // Se o modo foco estiver habilitado e houver tarefas pendentes, ativa automaticamente
+    if (this.focusModeEnabled && !this.focusMode) {
+      const columnsWithPendingTasks = this.boardService.getColumnsWithPendingTasks();
+      if (columnsWithPendingTasks.length > 0) {
+        this.appStateService.setFocusMode(true);
+      }
+    }
   }
 
   openNewActivityModal(): void {
@@ -185,5 +214,22 @@ export class DashboardComponent {
     if (confirm('Tem certeza que deseja excluir esta lista? Todas as tarefas serão removidas.')) {
       this.boardService.deleteColumn(columnId);
     }
+  }
+
+  toggleTaskComplete(taskId: string): void {
+    this.boardService.toggleTaskComplete(taskId);
+    
+    // Se estiver em modo foco, verifica se ainda há tarefas pendentes
+    if (this.focusMode) {
+      const columnsWithPendingTasks = this.boardService.getColumnsWithPendingTasks();
+      if (columnsWithPendingTasks.length === 0) {
+        // Não há mais tarefas pendentes, desativa o modo foco
+        this.appStateService.setFocusMode(false);
+      }
+    }
+  }
+
+  nextGuidedStep(): void {
+    this.guidedStepsService.nextStep();
   }
 }
