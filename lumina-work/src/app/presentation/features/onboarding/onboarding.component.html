@@ -54,18 +54,22 @@
   <!-- Botões de navegação -->
   <div class="navigation-buttons">
     @if (currentStep() === 1) {
-      <button class="btn-skip" (click)="skipStep()">Pular etapa</button>
+      <button class="btn-skip" (click)="skipStep()" tabindex="0" aria-label="Pular etapa" (keydown.enter)="skipStep()" (keydown.space)="skipStep()">Pular etapa</button>
     }
     
     @if (currentStep() < 2) {
       <button 
         class="btn-next" 
         (click)="nextStep()"
-        [disabled]="!canProceed">
+        [disabled]="!canProceed"
+        tabindex="0"
+        aria-label="Próximo"
+        (keydown.enter)="nextStep()"
+        (keydown.space)="nextStep()">
         Próximo
       </button>
     } @else {
-      <button class="btn-finish" (click)="finish()">Começar</button>
+      <button class="btn-finish" (click)="finish()" tabindex="0" aria-label="Começar" (keydown.enter)="finish()" (keydown.space)="finish()">Começar</button>
     }
   </div>
 </div>

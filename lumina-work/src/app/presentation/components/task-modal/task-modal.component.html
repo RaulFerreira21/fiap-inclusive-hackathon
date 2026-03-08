@@ -66,11 +66,15 @@
     </div>
 
     <div class="modal-actions">
-      <button class="btn-cancel" (click)="onClose()">Cancelar</button>
+      <button class="btn-cancel" (click)="onClose()" tabindex="0" aria-label="Cancelar" (keydown.enter)="onClose()" (keydown.space)="onClose()">Cancelar</button>
       <button 
         class="btn-save" 
         (click)="onSave()" 
-        [disabled]="!taskForm().name.trim()">
+        [disabled]="!taskForm().name.trim()"
+        tabindex="0"
+        aria-label="Salvar"
+        (keydown.enter)="onSave()"
+        (keydown.space)="onSave()">
         Salvar
       </button>
     </div>

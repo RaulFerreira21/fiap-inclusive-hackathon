@@ -31,19 +31,31 @@
                 <button
                   class="btn-icon"
                   (click)="onToggleCollapse(column.columnId)"
-                  title="Colapsar coluna">
+                  title="Colapsar coluna"
+                  tabindex="0"
+                  aria-label="Colapsar coluna"
+                  (keydown.enter)="onToggleCollapse(column.columnId)"
+                  (keydown.space)="onToggleCollapse(column.columnId)">
                   &#x007C;&#x2190;
                 </button>
                 <button
                   class="btn-icon"
                   (click)="onEditColumn(column)"
-                  title="Editar lista">
+                  title="Editar lista"
+                  tabindex="0"
+                  aria-label="Editar lista"
+                  (keydown.enter)="onEditColumn(column)"
+                  (keydown.space)="onEditColumn(column)">
                   ✏️
                 </button>
                 <button
                   class="btn-icon"
                   (click)="onDeleteColumn(column.columnId)"
-                  title="Excluir lista">
+                  title="Excluir lista"
+                  tabindex="0"
+                  aria-label="Excluir lista"
+                  (keydown.enter)="onDeleteColumn(column.columnId)"
+                  (keydown.space)="onDeleteColumn(column.columnId)">
                   🗑️
                 </button>
               </div>
@@ -60,7 +72,11 @@
                     <button
                       class="btn-task-icon"
                       (click)="onEditTask(column, task)"
-                      title="Editar">
+                      title="Editar"
+                      tabindex="0"
+                      aria-label="Editar tarefa"
+                      (keydown.enter)="onEditTask(column, task)"
+                      (keydown.space)="onEditTask(column, task)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -69,7 +85,11 @@
                     <button
                       class="btn-task-icon delete"
                       (click)="onDeleteTask(task.id)"
-                      title="Excluir">
+                      title="Excluir"
+                      tabindex="0"
+                      aria-label="Excluir tarefa"
+                      (keydown.enter)="onDeleteTask(task.id)"
+                      (keydown.space)="onDeleteTask(task.id)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="3 6 5 6 21 6"/>
                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -84,7 +104,7 @@
             }
 
             <!-- Botão adicionar atividade -->
-            <button class="btn-add-task" (click)="onAddTask(column)">
+            <button class="btn-add-task" (click)="onAddTask(column)" tabindex="0" aria-label="Adicionar atividade" (keydown.enter)="onAddTask(column)" (keydown.space)="onAddTask(column)">
               <span>+</span> Adicionar atividade
             </button>
           </div>
@@ -95,7 +115,7 @@
 
   <!-- Botão adicionar nova lista -->
   @if (!focusMode) {
-    <button class="btn-add-list" (click)="onAddColumn()">
+    <button class="btn-add-list" (click)="onAddColumn()" tabindex="0" aria-label="Adicionar lista" (keydown.enter)="onAddColumn()" (keydown.space)="onAddColumn()">
       <span>+</span> Adicionar lista
     </button>
   }

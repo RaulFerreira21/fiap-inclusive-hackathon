@@ -8,7 +8,7 @@
           <h2 class="panel-title">Configurações</h2>
           <p class="panel-subtitle">Personalize sua experiência de uso</p>
         </div>
-        <button class="panel-close" type="button" (click)="onClose()">✕</button>
+        <button class="panel-close" type="button" (click)="onClose()" tabindex="0" aria-label="Fechar painel" (keydown.enter)="onClose()" (keydown.space)="onClose()">✕</button>
       </header>
 
       <!-- Acessibilidade Cognitiva -->
@@ -157,7 +157,7 @@
       </section>
 
       <div class="panel-footer">
-        <button type="submit" class="btn-save">Salvar</button>
+        <button type="submit" class="btn-save" tabindex="0" aria-label="Salvar configurações" (keydown.enter)="onClose()" (keydown.space)="onClose()">Salvar</button>
       </div>
     </form>
   </aside>
