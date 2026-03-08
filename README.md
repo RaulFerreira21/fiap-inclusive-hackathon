@@ -1,12 +1,3 @@
-## Acessibilidade e Navegação por Teclado
-O Lumina foi desenvolvido com foco em acessibilidade para pessoas com TDAH, Autismo e outras condições. É possível navegar por todo o sistema usando apenas o teclado:
-
-- Todos os botões, modais e painéis possuem `tabindex` e `aria-label`.
-- Ações podem ser realizadas com Enter ou Espaço.
-- Os fluxos principais (onboarding, dashboard, modais, painel de configurações) são totalmente acessíveis.
-- Overlay e painéis possuem roles e navegação por teclado.
-
-Essas melhorias garantem uma experiência inclusiva, sem dependência do mouse.
 # fiap-inclusive-hackathon
 
 ## Sobre o Projeto
@@ -60,6 +51,15 @@ lumina-work/
 ├── package.json
 └── ...
 ```
+## Acessibilidade e Navegação por Teclado
+O Lumina foi desenvolvido com foco em acessibilidade para pessoas com TDAH, Autismo e outras condições. É possível navegar por todo o sistema usando apenas o teclado:
+
+- Todos os botões, modais e painéis possuem `tabindex` e `aria-label`.
+- Ações podem ser realizadas com Enter ou Espaço.
+- Os fluxos principais (onboarding, dashboard, modais, painel de configurações) são totalmente acessíveis.
+- Overlay e painéis possuem roles e navegação por teclado.
+
+Essas melhorias garantem uma experiência inclusiva, sem dependência do mouse.
 
 ## Contribuição
 Pull requests são bem-vindos. Para contribuir, siga as práticas de Git Flow e mantenha a cobertura de testes.
