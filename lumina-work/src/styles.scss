@@ -52,6 +52,11 @@ body {
 /* ========== global.scss / styles.scss ========== */
 
 /* tamanho da fonte raiz (1rem) */
+html.font-small  { font-size: 14px; }
+html.font-medium { font-size: 16px; } /* valor padrão */
+html.font-large  { font-size: 18px; }
+
+/* Fallback para body */
 body.font-small  { font-size: 14px; }
 body.font-medium { font-size: 16px; } /* valor padrão */
 body.font-large  { font-size: 18px; }

@@ -98,6 +98,7 @@ export class AppStateService {
 
   private applyAccessibilityClasses(): void {
     const body = document.body;
+    const html = document.documentElement;
 
     body.classList.toggle('clear-reading', this.clearReading());
     body.classList.toggle('low-attention', this.lowAttention());
@@ -105,6 +106,10 @@ export class AppStateService {
 
     body.classList.toggle('dark-mode', this.darkMode());
     body.classList.toggle('high-contrast', this.highContrast());
+
+    // Apply font-size classes to both html (for rem) and body (fallback)
+    html.classList.remove('font-small', 'font-medium', 'font-large');
+    html.classList.add(`font-${this.fontSize()}`);
 
     body.classList.remove('font-small', 'font-medium', 'font-large');
     body.classList.add(`font-${this.fontSize()}`);
