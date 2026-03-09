@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from '../header/header.component';
 import { PomodoroService } from '../../../services/pomodoro.service';
 import { AppStateService } from '../../../services/app-state.service';
+import { BoardService } from '../../../services/board.service';
+import { GuidedStepsService } from '../../../services/guided-steps.service';
 
 describe('Header', () => {
   let component: HeaderComponent;
@@ -14,12 +16,22 @@ describe('Header', () => {
   };
 
   const appStateServiceMock = {
-    pomodoroTimerEnabled: vi.fn(),
-    pomodoroEnabled: vi.fn(),
-    focusModeEnabled: vi.fn(),
-    focusMode: vi.fn(),
-    hasOpenLists: vi.fn(),
+    pomodoroTimerEnabled: vi.fn(() => true),
+    pomodoroEnabled: vi.fn(() => true),
+    focusModeEnabled: vi.fn(() => true),
+    focusMode: vi.fn(() => false),
+    guidedSteps: vi.fn(() => false),
     toggleFocusMode: vi.fn(),
+  };
+
+  const boardServiceMock = {
+    hasExpandedColumnsWithPendingTasks: vi.fn(() => true),
+  };
+
+  const guidedStepsServiceMock = {
+    currentStep: vi.fn(() => 0),
+    nextStep: vi.fn(),
+    resetSteps: vi.fn(),
   };
 
   beforeEach(async () => {
@@ -28,6 +40,8 @@ describe('Header', () => {
       providers: [
         { provide: PomodoroService, useValue: pomodoroServiceMock },
         { provide: AppStateService, useValue: appStateServiceMock },
+        { provide: BoardService, useValue: boardServiceMock },
+        { provide: GuidedStepsService, useValue: guidedStepsServiceMock },
       ],
     }).compileComponents();
 
@@ -58,7 +72,7 @@ describe('Header', () => {
   });
 
   it('should return canToggleFocus', () => {
-    appStateServiceMock.hasOpenLists.mockReturnValue(false);
+    boardServiceMock.hasExpandedColumnsWithPendingTasks.mockReturnValue(false);
 
     expect(component.canToggleFocus).toBe(false);
   });
@@ -70,6 +84,7 @@ describe('Header', () => {
   });
 
   it('should call toggleFocusMode when toggleFocusMode is called', () => {
+    boardServiceMock.hasExpandedColumnsWithPendingTasks.mockReturnValue(true);
     component.toggleFocusMode();
 
     expect(appStateServiceMock.toggleFocusMode).toHaveBeenCalled();

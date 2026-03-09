@@ -18,6 +18,7 @@ export class BoardComponent {
   @Input() columns = signal<Column[]>([]);
   @Input() focusMode = false; // plain boolean still OK
   @Input() focusActivity = '';
+  @Input() hideAnimations = false;
 
   @Output() toggleColumnCollapse = new EventEmitter<string>();
   @Output() addColumn = new EventEmitter<void>();
@@ -26,21 +27,34 @@ export class BoardComponent {
   @Output() addTask = new EventEmitter<Column>();
   @Output() editTask = new EventEmitter<{ column: Column; task: Task }>();
   @Output() deleteTask = new EventEmitter<string>();
+  @Output() toggleTaskComplete = new EventEmitter<string>();
 
-  collapsedColumns = signal<Set<string>>(new Set());
+  // Removido: collapsedColumns local, agora usa o do BoardService
+
+  // Getter para colunas visíveis (no modo foco, apenas as com tarefas pendentes)
+  get visibleColumns(): Column[] {
+    if (this.focusMode) {
+      return this.boardService.getColumnsWithPendingTasks();
+    }
+    return this.columns();
+  }
+
+  // Getter para tarefas visíveis (no modo foco, apenas as não concluídas)
+  getVisibleTasksByColumn(columnId: string): Task[] {
+    if (this.focusMode) {
+      return this.boardService.getUncompletedTasksByColumn(columnId);
+    }
+    return this.boardService.getTasksByColumn(columnId);
+  }
 
   isCollapsed(columnId: string): boolean {
-    return this.collapsedColumns().has(columnId);
+    return this.boardService.isColumnCollapsed(columnId);
   }
 
   onToggleCollapse(columnId: string): void {
-    const current = new Set(this.collapsedColumns());
-    if (current.has(columnId)) {
-      current.delete(columnId);
-    } else {
-      current.add(columnId);
-    }
-    this.collapsedColumns.set(current);
+    if (this.focusMode) return; // Desabilitar no modo foco
+    
+    this.boardService.toggleColumnCollapse(columnId);
     this.toggleColumnCollapse.emit(columnId);
   }
 
@@ -70,6 +84,10 @@ export class BoardComponent {
 
   onDeleteTask(taskId: string): void {
     this.deleteTask.emit(taskId);
+  }
+
+  onToggleTaskComplete(taskId: string): void {
+    this.toggleTaskComplete.emit(taskId);
   }
 
   trackByColumnId(index: number, column: Column): string {

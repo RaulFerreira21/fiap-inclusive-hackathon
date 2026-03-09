@@ -20,6 +20,7 @@
 .logo {
   display: flex;
   align-items: center;
+  position: relative;
 
   .logo-icon {
     font-size: 1.75rem;
@@ -27,10 +28,177 @@
   }
 }
 
+/* Tooltip do Modo Guiado */
+.guided-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.75rem;
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 290px;
+  max-width: 350px;
+  animation: slideIn 0.3s ease-out;
+
+  &.guided-logo-tooltip {
+    left: 0;
+    transform: translateX(0);
+  }
+
+  .tooltip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tooltip-message {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .guided-next-btn {
+    background: none;
+    border: none;
+    color: #6366f1;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-align: right;
+    align-self: flex-end;
+
+    &:hover {
+      color: #4f46e5;
+    }
+
+    &:active {
+      opacity: 0.7;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #6366f1;
+      outline-offset: 2px;
+      border-radius: 0.25rem;
+    }
+  }
+
+  .tooltip-arrow {
+    position: absolute;
+    top: -0.5rem;
+    left: 11;
+    width: 0;
+    height: 0;
+    border-left: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid #1f2937;
+  }
+}
+
+/* Dark mode support */
+:host-context(.dark-mode) .guided-tooltip {
+  background-color: #374151;
+  color: #e5e7eb;
+
+  .tooltip-arrow {
+    border-bottom-color: #374151;
+  }
+}
+
+/* High contrast support */
+:host-context(.high-contrast) .guided-tooltip {
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #fff;
+
+  .tooltip-arrow {
+    border-bottom-color: #000;
+  }
+}
+
+/* Low attention mode support */
+:host-context(.mode-low-attention) .guided-tooltip {
+  padding: calc(0.875rem + 4px) calc(1rem + 4px);
+  font-size: calc(0.875rem + 4px);
+  min-width: calc(280px + 20px);
+  max-width: calc(350px + 20px);
+
+  .tooltip-message {
+    font-size: calc(0.875rem + 4px);
+  }
+}
+
+/* Animação de entrada */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+:host-context(.mode-guided-steps) .guided-logo-tooltip {
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(0) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0);
+    }
+  }
+}
+
 .header-controls {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
+}
+
+.guided-controls-tooltip {
+  left: 50%;
+  transform: translateX(-50%);
+
+  .tooltip-arrow {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.guided-settings-tooltip {
+  left: auto;
+  right: 0;
+  transform: none;
+  animation: slideInRightToLeft 0.3s ease-out;
+
+  .tooltip-arrow {
+    left: auto;
+    right: 0.75rem;
+    transform: none;
+  }
+}
+
+@keyframes slideInRightToLeft {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* Pill do Pomodoro: 🍅 + tempo + botão play juntos */
@@ -55,6 +223,10 @@
     color: #1f2937;
     min-width: 2.5rem;
     text-align: center;
+  }
+
+  .pomodoro-toggle{
+    width: 35px;
   }
 
   .play-btn {
@@ -83,7 +255,7 @@
   background-color: #E0E0E0;
   border: 1px solid #b8b8b8;
   border-radius: 9999px;
-  padding: 0.3rem 0.75rem;
+  padding: 0.54rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -156,4 +328,55 @@
     outline: 2px solid #6366f1;
     outline-offset: 2px;
   }
+
+  &.guided-step-focus {
+    outline: 2px solid #6366f1;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25), 0 2px 4px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+}
+
+/* Toast notification */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  font-size: 0.875rem;
+  font-weight: 500;
+  z-index: 1100;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease-in-out;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Dark mode support */
+:host-context(.dark-mode) .toast-notification {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+/* High contrast support */
+:host-context(.high-contrast) .toast-notification {
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #fff;
+}
+
+/* Low attention mode support */
+:host-context(.mode-low-attention) .toast-notification {
+  padding: calc(0.75rem + 4px) calc(1rem + 4px); /* aumenta padding em 4px */
+  font-size: calc(0.875rem + 4px); /* aumenta fonte em 4px */
+  max-width: calc(300px + 20px); /* aumenta largura máxima em 20px */
 }

@@ -1,9 +1,12 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
+import { GuidedStepsService } from './guided-steps.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppStateService {
+  private guidedStepsService = inject(GuidedStepsService);
+
   focusMode = signal(false);
   pomodoroEnabled = signal(true);
   openLists = signal(0);
@@ -30,7 +33,13 @@ export class AppStateService {
   }
 
   toggleFocusMode(): void {
-    this.focusMode.update((value) => !value);
+    this.focusMode.update(value => !value);
+    this.saveFocusMode();
+  }
+
+  setFocusMode(enabled: boolean): void {
+    this.focusMode.set(enabled);
+    this.saveFocusMode();
   }
 
   togglePomodoro(): void {
@@ -56,6 +65,8 @@ export class AppStateService {
     pomodoroTimerEnabled: boolean;
     hideAnimations: boolean;
   }): void {
+    const wasGuidedStepsEnabled = this.guidedSteps();
+
     this.clearReading.set(settings.clearReading);
     this.lowAttention.set(settings.lowAttention);
     this.fontSize.set(settings.fontSize);
@@ -65,11 +76,25 @@ export class AppStateService {
     this.focusModeEnabled.set(settings.focusModeEnabled);
     this.pomodoroTimerEnabled.set(settings.pomodoroTimerEnabled);
     this.hideAnimations.set(settings.hideAnimations);
+
+    // Sempre que os passos guiados forem ligados, reinicia no primeiro step.
+    if (!wasGuidedStepsEnabled && settings.guidedSteps) {
+      this.guidedStepsService.resetSteps();
+    }
+
     // Salva as configurações no localStorage
     this.saveSettings();
 
     console.warn('[AppState] Configurações atualizadas:', settings);
   }
+
+  activateGuidedSteps(): void {
+    this.guidedSteps.set(true);
+    this.guidedStepsService.resetSteps();
+    this.saveSettings();
+  }
+
+  // ============ APLICAR CLASSES DE ACESSIBILIDADE ============
 
   private applyAccessibilityClasses(): void {
     const body = document.body;
@@ -100,6 +125,10 @@ export class AppStateService {
     localStorage.setItem('lumina_settings', JSON.stringify(settings));
   }
 
+  private saveFocusMode(): void {
+    localStorage.setItem('lumina_focus_mode', JSON.stringify(this.focusMode()));
+  }
+
   private loadSettings(): void {
     const saved = localStorage.getItem('lumina_settings');
     if (saved) {
@@ -108,6 +137,16 @@ export class AppStateService {
         this.updateSettings(settings);
       } catch (e) {
         console.error('[AppState] Erro ao carregar configurações:', e);
+      }
+    }
+
+    // Carrega o estado do modo foco separadamente
+    const savedFocusMode = localStorage.getItem('lumina_focus_mode');
+    if (savedFocusMode) {
+      try {
+        this.focusMode.set(JSON.parse(savedFocusMode));
+      } catch (e) {
+        console.error('[AppState] Erro ao carregar modo foco:', e);
       }
     }
   }
