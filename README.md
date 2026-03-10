@@ -49,9 +49,11 @@ O projeto utiliza GitHub Actions para automação de testes, build e deploy:
 lumina-work/
 ├── src/
 │   ├── app/
-│   │   ├── components/
+│   │   ├── presentation/
+│   │   │     └── components/
+│   │	│ 	  └── features/
 │   │   ├── domain/
-│   │   ├── features/
+│   │	│ 	  └── models/
 │   │   └── services/
 │   ├── index.html
 │   └── main.ts
