@@ -16,8 +16,7 @@ O **Lumina** é um todo-list no estilo Kanban (inspirado no Trello e Jira) com f
 |---|---|---|
 | [Angular](https://angular.dev/overview) | 21 | Framework Web
 | [TypeScript](https://www.typescriptlang.org/) | 5+ | Tipagem estática
-| 
-[Node.js](https://nodejs.org/en) | 20.19.5
+| [Node.js](https://nodejs.org/en) | 20.19.5
 | GitHub Actions (CI/CD)
 
 ## Estrutura de CI/CD Pipeline
@@ -29,11 +28,11 @@ O projeto utiliza GitHub Actions para automação de testes, build e deploy:
 ## Como Rodar o Projeto Localmente
 1. Clone o repositório:
 	```bash
-	git clone https://github.com/RaulFerreira21/fiap-inclusive-hackathon.git
+	git clone https://github.com/RaulFerreira21/lumina-web
 	```
 2. Acesse a pasta do projeto:
 	```bash
-	cd fiap-inclusive-hackathon/lumina-work
+	cd lumina-web/lumina-work
 	```
 3. Instale as dependências:
 	```bash
