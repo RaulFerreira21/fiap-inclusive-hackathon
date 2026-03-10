@@ -1,14 +1,24 @@
-# fiap-inclusive-hackathon
+# 🌞 Lumina
 
-## Sobre o Projeto
-Lumina é uma aplicação web desenvolvida para o FIAP Inclusive Hackathon, focada em acessibilidade, produtividade e inclusão. O objetivo é facilitar a organização de tarefas, promover o uso de técnicas como Pomodoro e oferecer uma experiência acessível para todos os usuários.
+> Aplicativo de gerenciamento de tarefas acessível, desenvolvido para pessoas com autismo, TDAH e outras condições neurológicas.
 
-## Tecnologias Utilizadas
-- Angular
-- TypeScript
-- SCSS
-- Node.js
-- GitHub Actions (CI/CD)
+---
+
+## 📋 Sobre o Projeto
+
+O **Lumina** é um todo-list no estilo Kanban (inspirado no Trello e Jira) com foco em **acessibilidade cognitiva**. O app foi projetado para reduzir a sobrecarga sensorial e facilitar a organização de tarefas para pessoas neurodivergentes, com recursos como modo foco, timer pomodoro, modos cognitivos personalizados e paleta de cores pastéis.
+
+---
+
+## 🛠️ Tecnologias
+
+| Tecnologia | Versão | Uso |
+|---|---|---|
+| [Angular](https://angular.dev/overview) | 21 | Framework Web
+| [TypeScript](https://www.typescriptlang.org/) | 5+ | Tipagem estática
+| 
+[Node.js](https://nodejs.org/en) | 20.19.5
+| GitHub Actions (CI/CD)
 
 ## Estrutura de CI/CD Pipeline
 O projeto utiliza GitHub Actions para automação de testes, build e deploy:
@@ -61,8 +71,35 @@ O Lumina foi desenvolvido com foco em acessibilidade para pessoas com TDAH, Auti
 
 Essas melhorias garantem uma experiência inclusiva, sem dependência do mouse.
 
+## ♿ Acessibilidade
+
+O Lumina foi desenvolvido com foco em acessibilidade cognitiva:
+
+- **Cores pastéis** — reduzem a sobrecarga sensorial visual
+- **Modo foco** — elimina distrações, exibe apenas o necessário
+- **Passos guiados** — orienta o usuário em ações dentro do app
+- **Alertas visuais** — alternativa a alertas sonoros
+- **Tamanho de fonte ajustável** — conforto na leitura
+- **Modos cognitivos pré-configurados** — adaptações rápidas para diferentes necessidades
+
+---
+
+## 🗺️ Próximos Passos
+
+- [ ] Tela de Configurações funcional
+- [ ] Persistência de dados com AsyncStorage
+- [ ] Notificações ao fim do ciclo pomodoro
+- [ ] Autenticação de usuário
+- [ ] Sincronização na nuvem
+- [ ] Modo escuro (Sensibilidade Sensorial)
+
+---
+
 ## Contribuição
 Pull requests são bem-vindos. Para contribuir, siga as práticas de Git Flow e mantenha a cobertura de testes.
 
 ## Contato
 Para dúvidas ou sugestões, abra uma issue no repositório.
+
+
+<p align="center">Feito com 🌞 para tornar a produtividade mais acessível</p>
