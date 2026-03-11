@@ -79,35 +79,31 @@ export class DashboardComponent implements OnInit {
   get focusModeEnabled(): boolean {
     return this.appStateService.focusModeEnabled();
   }
-
-  // ============ GETTERS DO BoardService ============
   get columns(): Column[] {
     return this.boardService.columns();
   }
-  /** expose the raw signal for child inputs that expect a Signal */
+  
   columnsSignal = this.boardService.columns;
 
   get focusActivity(): string {
     return localStorage.getItem('focusActivity') || '';
   }
 
-  // Prevent unused import warnings for dynamically referenced components
   protected readonly TaskModal = TaskModalComponent;
   protected readonly ListModal = ListModalComponent;
   protected readonly Board = BoardComponent;
 
   onToggleColumnCollapse(_columnId: string): void {
-    // Update openLists count when column collapse state changes
     const openCount = this.columns.length;
     this.appStateService.setOpenLists(openCount);
   }
   ngOnInit(): void {
-    // Verifica se deve ativar o modo foco automaticamente
+
     this.checkFocusModeActivation();
   }
 
   private checkFocusModeActivation(): void {
-    // Se o modo foco estiver habilitado e houver tarefas pendentes, ativa automaticamente
+
     if (this.focusModeEnabled && !this.focusMode) {
       const columnsWithPendingTasks = this.boardService.getColumnsWithPendingTasks();
       if (columnsWithPendingTasks.length > 0) {
@@ -219,11 +215,11 @@ export class DashboardComponent implements OnInit {
   toggleTaskComplete(taskId: string): void {
     this.boardService.toggleTaskComplete(taskId);
     
-    // Se estiver em modo foco, verifica se ainda há tarefas pendentes
+
     if (this.focusMode) {
       const columnsWithPendingTasks = this.boardService.getColumnsWithPendingTasks();
       if (columnsWithPendingTasks.length === 0) {
-        // Não há mais tarefas pendentes, desativa o modo foco
+    
         this.appStateService.setFocusMode(false);
       }
     }

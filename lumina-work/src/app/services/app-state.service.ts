@@ -19,9 +19,9 @@ export class AppStateService {
   darkMode = signal(false);
   highContrast = signal(false);
 
-  // Settings signals - Foco e Produtividade
-  focusModeEnabled = signal(true); // controla se o botão aparece no header
-  pomodoroTimerEnabled = signal(true); // controla se o timer pomodoro aparece
+  
+  focusModeEnabled = signal(true); 
+  pomodoroTimerEnabled = signal(true); 
   hideAnimations = signal(false);
 
   constructor() {
@@ -77,12 +77,12 @@ export class AppStateService {
     this.pomodoroTimerEnabled.set(settings.pomodoroTimerEnabled);
     this.hideAnimations.set(settings.hideAnimations);
 
-    // Sempre que os passos guiados forem ligados, reinicia no primeiro step.
+    
     if (!wasGuidedStepsEnabled && settings.guidedSteps) {
       this.guidedStepsService.resetSteps();
     }
 
-    // Salva as configurações no localStorage
+    
     this.saveSettings();
 
     console.warn('[AppState] Configurações atualizadas:', settings);
@@ -94,7 +94,7 @@ export class AppStateService {
     this.saveSettings();
   }
 
-  // ============ APLICAR CLASSES DE ACESSIBILIDADE ============
+  
 
   private applyAccessibilityClasses(): void {
     const body = document.body;
@@ -107,7 +107,7 @@ export class AppStateService {
     body.classList.toggle('dark-mode', this.darkMode());
     body.classList.toggle('high-contrast', this.highContrast());
 
-    // Apply font-size classes to both html (for rem) and body (fallback)
+    
     html.classList.remove('font-small', 'font-medium', 'font-large');
     html.classList.add(`font-${this.fontSize()}`);
 
@@ -145,7 +145,7 @@ export class AppStateService {
       }
     }
 
-    // Carrega o estado do modo foco separadamente
+    
     const savedFocusMode = localStorage.getItem('lumina_focus_mode');
     if (savedFocusMode) {
       try {

@@ -4,7 +4,7 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class GuidedStepsService {
-  // Estado atual do step (0 = logo, 1 = dashboard, etc)
+  
   currentStep = signal<number>(0);
 
   nextStep(): void {

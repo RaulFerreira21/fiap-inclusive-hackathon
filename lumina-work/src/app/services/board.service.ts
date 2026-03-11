@@ -26,7 +26,7 @@ export class BoardService {
     if (savedColumns) {
       this.columns.set(JSON.parse(savedColumns));
     } else {
-      // Criar colunas padrão
+    
       const defaultColumns: Column[] = [
         { columnId: '1', name: 'Backlog', color: '#E8F0FE' },
         { columnId: '3', name: 'Desenvolvimento', color: '#9CA4A4' },
@@ -62,7 +62,7 @@ export class BoardService {
     localStorage.setItem(this.STORAGE_KEY_COLLAPSED, JSON.stringify(Array.from(this.collapsedColumns())));
   }
 
-  // CRUD de Colunas
+
   addColumn(name: string, color: string): void {
     const newColumn: Column = {
       columnId: this.generateId(),
@@ -142,7 +142,7 @@ export class BoardService {
     });
   }
 
-  // Métodos para gerenciar estado de colapso das colunas
+
   toggleColumnCollapse(columnId: string): void {
     const current = new Set(this.collapsedColumns());
     if (current.has(columnId)) {
@@ -158,11 +158,11 @@ export class BoardService {
     return this.collapsedColumns().has(columnId);
   }
 
-  // Verifica se há colunas expandidas com tarefas pendentes
+
   hasExpandedColumnsWithPendingTasks(): boolean {
     return this.columns().some(column => {
       const isCollapsed = this.isColumnCollapsed(column.columnId);
-      if (isCollapsed) return false; // Se está colapsada, não conta
+      if (isCollapsed) return false;
       
       const pendingTasks = this.getUncompletedTasksByColumn(column.columnId);
       return pendingTasks.length > 0;

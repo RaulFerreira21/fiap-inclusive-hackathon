@@ -92,21 +92,20 @@ export class HeaderComponent {
     toast.className = 'toast-notification';
     toast.textContent = message;
     
-    // Adicionar ao body
+   
     document.body.appendChild(toast);
     
-    // Forçar reflow para animação
+   
     void toast.offsetHeight;
     
-    // Mostrar toast
+   
     toast.classList.add('show');
     
-    // Remover após 3 segundos
     setTimeout(() => {
       toast.classList.remove('show');
       setTimeout(() => {
         document.body.removeChild(toast);
-      }, 300); // Tempo da transição
+      }, 300);
     }, 3000);
   }
 }
