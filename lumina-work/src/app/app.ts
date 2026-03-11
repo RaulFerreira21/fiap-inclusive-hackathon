@@ -35,7 +35,6 @@ export class App {
       previousGuidedStepsState = currentGuidedStepsState;
     });
 
-    // Ocultar header/footer no onboarding
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -45,7 +44,6 @@ export class App {
 
   handleOpenSettings(): void {
     this.settingsOpen = true;
-    // TODO: Implementar modal ou rota de configurações
   }
 
   handleCloseSettings() {

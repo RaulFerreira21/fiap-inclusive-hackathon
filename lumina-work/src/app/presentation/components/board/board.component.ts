@@ -14,9 +14,9 @@ import { BoardService } from '../../../services/board.service';
 export class BoardComponent {
   private boardService = inject(BoardService);
 
-  // reactive inputs (Angular 21 signals) where appropriate
+
   @Input() columns = signal<Column[]>([]);
-  @Input() focusMode = false; // plain boolean still OK
+  @Input() focusMode = false; 
   @Input() focusActivity = '';
   @Input() hideAnimations = false;
 
@@ -29,9 +29,6 @@ export class BoardComponent {
   @Output() deleteTask = new EventEmitter<string>();
   @Output() toggleTaskComplete = new EventEmitter<string>();
 
-  // Removido: collapsedColumns local, agora usa o do BoardService
-
-  // Getter para colunas visíveis (no modo foco, apenas as com tarefas pendentes)
   get visibleColumns(): Column[] {
     if (this.focusMode) {
       return this.boardService.getColumnsWithPendingTasks();
@@ -39,7 +36,6 @@ export class BoardComponent {
     return this.columns();
   }
 
-  // Getter para tarefas visíveis (no modo foco, apenas as não concluídas)
   getVisibleTasksByColumn(columnId: string): Task[] {
     if (this.focusMode) {
       return this.boardService.getUncompletedTasksByColumn(columnId);
@@ -52,7 +48,7 @@ export class BoardComponent {
   }
 
   onToggleCollapse(columnId: string): void {
-    if (this.focusMode) return; // Desabilitar no modo foco
+    if (this.focusMode) return; 
     
     this.boardService.toggleColumnCollapse(columnId);
     this.toggleColumnCollapse.emit(columnId);
